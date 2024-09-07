@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -38,6 +39,21 @@ public class PurseController {
     @PostMapping("/purses/new")
     public String savePurse(@ModelAttribute("purse") Purse purse){
         purseServices.savePurse(purse);
+        return "redirect:/purses";
+    }
+
+    @GetMapping("/purses/{purseId}/edit")
+    public String editPurseForm(@PathVariable("purseId") long purseId, Model model) {
+        PurseDto purse = purseServices.findPurseById(purseId);
+        model.addAttribute("purse", purse);
+        return "purses-edit";
+    }
+
+    @PostMapping("/purses/{purseId}/edit")
+    public String updatePurse(@PathVariable("purseId") long purseId, @ModelAttribute("purse") PurseDto purse){
+        purse.setId(purseId);
+        purseServices.updatePurse(purse);
+
         return "redirect:/purses";
     }
 }

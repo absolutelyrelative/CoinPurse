@@ -8,4 +8,8 @@ import java.util.List;
 public interface PurseServices {
     List<PurseDto> findAllPurses();
     Purse savePurse(Purse purse);
+
+    PurseDto findPurseById(long purseId);
+
+    void updatePurse(PurseDto purse);
 }

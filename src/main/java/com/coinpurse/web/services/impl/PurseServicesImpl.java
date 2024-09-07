@@ -26,8 +26,32 @@ public class PurseServicesImpl implements PurseServices {
     }
 
     @Override
+    public PurseDto findPurseById(long purseId){
+        Purse purse = purseRepository.findById(purseId).get();
+        return mapToPurseDto(purse);
+    }
+
+    @Override
     public Purse savePurse(Purse purse) {
         return purseRepository.save(purse);
+    }
+
+    @Override
+    public void updatePurse(PurseDto purseDto){
+        Purse purse = mapToPurse(purseDto);
+        purseRepository.save(purse);
+    }
+
+    private Purse mapToPurse(PurseDto purse) {
+        Purse purseDto = Purse.builder()
+                .id(purse.getId())
+                .title(purse.getTitle())
+                .amount(purse.getAmount())
+                .creation(purse.getCreation())
+                .currency(purse.getCurrency())
+                .build();
+
+        return purseDto;
     }
 
     private PurseDto mapToPurseDto(Purse purse) {
