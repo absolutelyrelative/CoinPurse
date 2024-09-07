@@ -25,6 +25,11 @@ public class PurseServicesImpl implements PurseServices {
         return purses.stream().map((purse)->mapToPurseDto(purse)).collect(Collectors.toList());
     }
 
+    @Override
+    public Purse savePurse(Purse purse) {
+        return purseRepository.save(purse);
+    }
+
     private PurseDto mapToPurseDto(Purse purse) {
         PurseDto purseDto = PurseDto.builder()
                 .id(purse.getId())
