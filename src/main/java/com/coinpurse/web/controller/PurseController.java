@@ -6,10 +6,7 @@ import com.coinpurse.web.services.PurseServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -55,5 +52,26 @@ public class PurseController {
         purseServices.updatePurse(purse);
 
         return "redirect:/purses";
+    }
+
+    @GetMapping("/purses/{purseId}")
+    public String purseDetail(@PathVariable("purseId") long purseId, Model model){
+        PurseDto purseDto = purseServices.findPurseById(purseId);
+        model.addAttribute("purse", purseDto);
+        return "purses-detail";
+    }
+
+    //TODO: Either admin or owner can do it
+    @GetMapping("/purses/{purseId}/delete")
+    public String deletePurse(@PathVariable("purseId") long purseId){
+        purseServices.delete(purseId);
+        return "redirect:/purses";
+    }
+
+    @GetMapping("/purses/search")
+    public String searchPurse(@RequestParam(value = "query") String query, Model model){
+        List<PurseDto> purses = purseServices.searchPurse(query);
+        model.addAttribute("purses", purses);
+        return "purses-list";
     }
 }

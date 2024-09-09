@@ -26,12 +26,18 @@
                 <p class="lead fw-normal text-muted mb-0">Show all purses</p>
             </div>
             <div class="row gx-5">
+                <div>
+                    <form th:action="@{/purses/search}" class="form-inline my-2 my-lg-0 mb-3">
+                        <input name="query" class="form-control mr-sm-2 mb-5" type="search" placeholder="Search purses" aria-label="Search">
+                    </form>
+                </div>
                 <div th:each="purse :${purses}" class="col-lg-6 mb-2">
                     <div class="position-relative mb-3">
                         <img class="img-fluid rounded-3 mb-3" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." />
                         <a th:text="${purse.title}" class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">Project name</a>
 
                     </div>
+                    <a class="btn btn-primary" th:href="@{/purses/{purseId}(purseId=${purse.id})}">View</a>
                     <a class="btn btn-primary" th:href="@{/purses/{purseId}/edit(purseId=${purse.id})}">Edit</a>
                 </div>
             </div>

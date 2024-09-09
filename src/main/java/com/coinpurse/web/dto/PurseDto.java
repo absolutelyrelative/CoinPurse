@@ -9,8 +9,11 @@ import java.time.LocalDateTime;
 @Builder
 public class PurseDto {
     private Long id;
+    //TODO: Figure out why validation dependency is not working
+    //@NotEmpty(message = "Purse title should not be empty.")
     private String title;
     private LocalDateTime creation;
+    //@NotEmpty(message = "Starting amount should not be empty.")
     private Float amount;
     private String currency;
 }

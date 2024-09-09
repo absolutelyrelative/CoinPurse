@@ -42,6 +42,17 @@ public class PurseServicesImpl implements PurseServices {
         purseRepository.save(purse);
     }
 
+    @Override
+    public void delete(long purseId) {
+        purseRepository.deleteById(purseId);
+    }
+
+    @Override
+    public List<PurseDto> searchPurse(String query) {
+        List<Purse> purses = purseRepository.searchPurse(query);
+        return purses.stream().map(purse -> mapToPurseDto(purse)).collect(Collectors.toList());
+    }
+
     private Purse mapToPurse(PurseDto purse) {
         Purse purseDto = Purse.builder()
                 .id(purse.getId())

@@ -12,4 +12,7 @@ public interface PurseServices {
     PurseDto findPurseById(long purseId);
 
     void updatePurse(PurseDto purse);
+
+    void delete(long purseId);
+    List<PurseDto> searchPurse(String query);
 }
