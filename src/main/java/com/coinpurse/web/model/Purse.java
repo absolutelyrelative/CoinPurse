@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -23,4 +25,7 @@ public class Purse {
     private LocalDateTime creation;
     private Float amount; //TODO: Remove, replace with 1:N relationship
     private String currency;
+
+    @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE)
+    private Set<Event> events = new HashSet<>();
 }
