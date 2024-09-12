@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,5 +29,5 @@ public class Purse {
     private String currency;
 
     @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE)
-    private Set<Event> events = new HashSet<>();
+    private List<Event> events = new ArrayList<>();
 }

@@ -9,6 +9,12 @@ import com.coinpurse.web.services.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.coinpurse.web.mapper.EventMapper.mapToEvent;
+import static com.coinpurse.web.mapper.EventMapper.mapToEventDto;
+
 @Service
 public class EventServicesImpl implements EventServices {
     private EventRepository eventRepository;
@@ -28,16 +34,11 @@ public class EventServicesImpl implements EventServices {
         eventRepository.save(event);
     }
 
-    private Event mapToEvent(EventDto eventDto) {
-        return Event.builder()
-                .id(eventDto.getId())
-                .comment(eventDto.getComment())
-                .date(eventDto.getDate())
-                .createdon(eventDto.getCreatedon())
-                .updatedon(eventDto.getUpdatedon())
-                .type(eventDto.getType())
-                .delta(eventDto.getDelta())
-                .finalvalue(eventDto.getFinalvalue())
-                .build();
+    @Override
+    public List<EventDto> findAllEvents() {
+        List<Event> events = eventRepository.findAll();
+        return events.stream().map(event -> mapToEventDto(event)).collect(Collectors.toList());
     }
+
+
 }

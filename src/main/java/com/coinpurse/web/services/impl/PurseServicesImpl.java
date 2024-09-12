@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.coinpurse.web.mapper.PurseMapper.mapToPurse;
+import static com.coinpurse.web.mapper.PurseMapper.mapToPurseDto;
+
 @Service
 public class PurseServicesImpl implements PurseServices {
     private PurseRepository purseRepository;
@@ -53,26 +56,4 @@ public class PurseServicesImpl implements PurseServices {
         return purses.stream().map(purse -> mapToPurseDto(purse)).collect(Collectors.toList());
     }
 
-    private Purse mapToPurse(PurseDto purse) {
-        Purse purseDto = Purse.builder()
-                .id(purse.getId())
-                .title(purse.getTitle())
-                .amount(purse.getAmount())
-                .creation(purse.getCreation())
-                .currency(purse.getCurrency())
-                .build();
-
-        return purseDto;
-    }
-
-    private PurseDto mapToPurseDto(Purse purse) {
-        PurseDto purseDto = PurseDto.builder()
-                .id(purse.getId())
-                .title(purse.getTitle())
-                .creation(purse.getCreation())
-                .amount(purse.getAmount())
-                .currency(purse.getCurrency())
-                .build();
-        return purseDto;
-    }
 }

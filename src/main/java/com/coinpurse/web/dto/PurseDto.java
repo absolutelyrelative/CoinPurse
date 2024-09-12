@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,4 +17,5 @@ public class PurseDto {
     //@NotEmpty(message = "Starting amount should not be empty.")
     private Float amount;
     private String currency;
+    private List<EventDto> events;
 }

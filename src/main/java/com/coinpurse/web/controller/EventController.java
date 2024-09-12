@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class EventController {
     private EventServices eventServices;
@@ -33,5 +35,12 @@ public class EventController {
     public String createEvent(@PathVariable("purseId") Long purseId, @ModelAttribute("event") EventDto eventDto, Model model) {
         eventServices.createEvent(purseId, eventDto);
         return "redirect:/purses/" + purseId;
+    }
+
+    @GetMapping("/events")
+    public String eventList(Model model) {
+        List<EventDto> events = eventServices.findAllEvents();
+        model.addAttribute("events", events);
+        return "events-list";
     }
 }
