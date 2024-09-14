@@ -46,6 +46,7 @@ public class PurseController {
         return "purses-edit";
     }
 
+    //TODO: Implement validation with @Valid and hasErrors()
     @PostMapping("/purses/{purseId}/edit")
     public String updatePurse(@PathVariable("purseId") long purseId, @ModelAttribute("purse") PurseDto purse){
         purse.setId(purseId);

@@ -14,6 +14,7 @@ public class EventMapper {
                 .type(eventDto.getType())
                 .delta(eventDto.getDelta())
                 .finalvalue(eventDto.getFinalvalue())
+                .purse(eventDto.getPurse())
                 .build();
     }
 
@@ -27,6 +28,7 @@ public class EventMapper {
                 .type(event.getType())
                 .delta(event.getDelta())
                 .finalvalue(event.getFinalvalue())
+                .purse(event.getPurse())
                 .build();
     }
 }

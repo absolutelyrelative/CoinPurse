@@ -1,5 +1,6 @@
 package com.coinpurse.web.dto;
 
+import com.coinpurse.web.model.Purse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,5 @@ public class EventDto {
     private String type; //TODO: Change to enum?
     private Float delta;
     private Float finalvalue; //TODO: Generate
+    private Purse purse;
 }
