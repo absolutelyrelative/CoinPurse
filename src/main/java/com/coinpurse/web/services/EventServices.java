@@ -7,4 +7,6 @@ import java.util.List;
 public interface EventServices {
     void createEvent(Long purseId, EventDto eventDto);
     List<EventDto> findAllEvents();
+
+    EventDto findByEventId(Long eventId);
 }

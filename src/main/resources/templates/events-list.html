@@ -38,6 +38,7 @@
                         <a th:text="${event.comment}" class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">Project name</a>
 
                     </div>
+                    <a class ="btn btn-primary" th:href="@{/events/{eventId}(eventId=${event.id})}">Event details</a>
                     <!-- <a class="btn btn-primary" th:href="@{/purses/{purseId}(purseId=${purse.id})}">View</a>
                     <a class="btn btn-primary" th:href="@{/purses/{purseId}/edit(purseId=${purse.id})}">Edit</a>-->
                 </div>

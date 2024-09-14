@@ -59,7 +59,7 @@
                                 <h2 th:text="${event.comment}" class="card-title h4"></h2>
                                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                                     Reiciendis aliquid atque, nulla.</p>
-                                <a class="btn btn-primary" href="#!">Read more →</a>
+                                <a class="btn btn-primary" th:href="@{/events/{eventId}(eventId=${event.id})}">Open event details</a>
                             </div>
                         </div>
                     </div>
