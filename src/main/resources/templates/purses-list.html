@@ -21,6 +21,9 @@
     <!-- Page Content-->
     <section layout:fragment="body" class="py-5">
         <div class="container px-5 my-5">
+            <div th:if="${param.success}" class="alert alert-success">
+                You are succesfully registered!
+            </div>
             <div class="text-center mb-5">
                 <h1 class="fw-bolder">All purses</h1>
                 <p class="lead fw-normal text-muted mb-0">Show all purses</p>
