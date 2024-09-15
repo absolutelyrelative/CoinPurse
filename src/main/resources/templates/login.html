@@ -21,31 +21,23 @@
     <!-- Page Content-->
     <section layout:fragment="body" class="py-5">
         <div class="container">
-            <div th:if="${param.fail}" class="alert alert-success">
-                Username or E-Mail already exists.
+            <div th:if="${param.error}" class="alert alert-success">
+                Invalid username/password.
             </div>
-            <form role="form" method="post" th:action="@{/register/save}" th:object="${user}">
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have been logged out.
+            </div>
+            <form role="form" method="post" th:action="@{/login}">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="title">Username</label>
+                        <label for="username">Username</label>
                         <input
                                 type="text"
                                 class="form-control"
-                                id="title"
-                                th:field="*{username}"
+                                id="username"
+                                name="username"
                                 placeholder="Username">
                     </div>
-                    <p th:if="${#fields.hasErrors('username')}" class="text-danger"></p>
-                    <div class="form-group col-md-6">
-                        <label for="email">E-Mail</label>
-                        <input
-                                type="text"
-                                class="form-control"
-                                id="email"
-                                th:field="*{email}"
-                                placeholder="E-Mail">
-                    </div>
-                    <p th:if="${#fields.hasErrors('email')}" class="text-danger"></p>
                 </div>
                 <div class="form-row">
                     <label for="password">Password</label>
@@ -53,12 +45,11 @@
                             type="password"
                             class="form-control"
                             id="password"
-                            th:field="*{password}"
+                            name="password"
                             placeholder="Password">
                 </div>
-                <p th:if="${#fields.hasErrors('password')}" class="text-danger"></p>
-                <button th:href="@{/register}" type="submit" class="btn btn-secondary">Register</button>
-                <button th:href="@{/login}" type="submit" class="btn btn-secondary">Log in</button>
+                <button th:href="@{/register}" type="submit" class="btn btn-secondary">Don't have an account? Register!</button>
+                <button type="submit" value="Log in" class="btn btn-secondary">Login</button>
             </form>
         </div>
     </section>

@@ -31,11 +31,11 @@ public class AuthController {
                            BindingResult result, Model model) {
         UserEntity existingUserEmail = userService.findByEmail(user.getEmail());
         if(existingUserEmail != null && existingUserEmail.getEmail() != null && !existingUserEmail.getEmail().isEmpty()){
-            result.rejectValue("email", "There is already a user with this email/username");
+           return "redirect:/register?fail";
         }
         UserEntity existingUserName = userService.findByUsername(user.getUsername());
         if(existingUserName != null && existingUserName.getUsername() != null && !existingUserName.getUsername().isEmpty()){
-            result.rejectValue("username", "There is already a user with this email/username");
+            return "redirect:/register?fail";
         }
         if(result.hasErrors()) {
             model.addAttribute("user", user);
@@ -43,5 +43,10 @@ public class AuthController {
         }
         userService.saveUser(user);
         return "redirect:/purses?success";
+    }
+
+    @GetMapping("/login")
+    public String loginPage(){
+        return "login";
     }
 }
