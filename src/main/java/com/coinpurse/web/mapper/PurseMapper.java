@@ -15,6 +15,7 @@ public class PurseMapper {
                 .amount(purse.getAmount())
                 .creation(purse.getCreation())
                 .currency(purse.getCurrency())
+                .createdBy(purse.getCreatedBy())
                 .build();
 
         return purseDto;
@@ -27,6 +28,7 @@ public class PurseMapper {
                 .creation(purse.getCreation())
                 .amount(purse.getAmount())
                 .currency(purse.getCurrency())
+                .createdBy(purse.getCreatedBy())
                 .events(purse.getEvents().stream().map((event) -> mapToEventDto(event)).collect(Collectors.toList()))
                 .build();
         return purseDto;

@@ -42,12 +42,12 @@
                         <div class="small text-muted" th:text="${event.delta}"></div>
                         <div class="small text-muted" th:text="${event.finalvalue}"></div>
                         <h2 class="card-title">About this event</h2>
-                        <a class="btn btn-primary" >Edit event</a>
-                        <a class="btn btn-primary" >Delete event</a>
                         <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis
                             aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi
                             vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                        <a class ="btn btn-primary" th:href="@{/events/{eventId}/delete(eventId=${event.id})}">Delete event</a>
+                        <div th:if="${user.id} == ${purse.createdBy.id}">
+                            <a class ="btn btn-primary" th:href="@{/events/{eventId}/delete(eventId=${event.id})}">Delete event</a>
+                        </div>
                     </div>
                 </div>
 

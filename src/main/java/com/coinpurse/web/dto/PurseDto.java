@@ -1,5 +1,6 @@
 package com.coinpurse.web.dto;
 
+import com.coinpurse.web.model.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class PurseDto {
     //@NotEmpty(message = "Starting amount should not be empty.")
     private Float amount;
     private String currency;
+    private UserEntity createdBy;
     private List<EventDto> events;
 }

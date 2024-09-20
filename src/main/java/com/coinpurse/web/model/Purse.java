@@ -28,6 +28,9 @@ public class Purse {
     private Float amount; //TODO: Remove, replace with 1:N relationship
     private String currency;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private UserEntity createdBy;
     @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE)
     private List<Event> events = new ArrayList<>();
 }

@@ -3,7 +3,10 @@ package com.coinpurse.web.controller;
 import com.coinpurse.web.dto.EventDto;
 import com.coinpurse.web.dto.PurseDto;
 import com.coinpurse.web.model.Event;
+import com.coinpurse.web.model.UserEntity;
+import com.coinpurse.web.security.SecurityUtil;
 import com.coinpurse.web.services.EventServices;
+import com.coinpurse.web.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +20,16 @@ import java.util.List;
 @Controller
 public class EventController {
     private EventServices eventServices;
+    private UserService userService;
 
 
     @Autowired
-    public EventController(EventServices eventServices) {
+    public EventController(EventServices eventServices, UserService userService) {
+        this.userService = userService;
         this.eventServices = eventServices;
     }
 
+    //TODO: Check why this isn't working anymore
     @GetMapping("/events/{purseId}/new")
     public String createEventForm(@PathVariable("purseId") Long purseId, Model model){
         Event event = new Event();
@@ -40,15 +46,30 @@ public class EventController {
 
     @GetMapping("/events")
     public String eventList(Model model) {
+        UserEntity user = new UserEntity();
         List<EventDto> events = eventServices.findAllEvents();
+        String sessionEmail = SecurityUtil.getSessionUser();
+        if(sessionEmail != null) {
+            user = userService.findByEmail(sessionEmail);
+            model.addAttribute("user", user);
+        }
+        model.addAttribute("user", user);
         model.addAttribute("events", events);
         return "events-list";
     }
 
     @GetMapping("/events/{eventId}")
     public String viewEvent(@PathVariable("eventId") Long eventId, Model model) {
+        UserEntity user = new UserEntity();
+        String sessionEmail = SecurityUtil.getSessionUser();
+        if(sessionEmail != null) {
+            user = userService.findByEmail(sessionEmail);
+            model.addAttribute("user", user);
+        }
+        model.addAttribute("user", user);
         EventDto eventDto = eventServices.findByEventId(eventId);
         model.addAttribute("event", eventDto);
+        model.addAttribute("purse", eventDto.getPurse());
         return "events-detail";
     }
 

@@ -39,12 +39,13 @@
                     <div class="card-body">
                         <div class="small text-muted" th:text="${purse.creation}"></div>
                         <h2 class="card-title">About this purse</h2>
-                        <a class="btn btn-primary" th:href="@{/events/{purseId}/new(purseId=${purse.id})}">Add/Withdraw</a>
-                        <a class="btn btn-primary" th:href="@{/purses/{purseId}/delete(purseId=${purse.id})}">Delete</a>
+                        <div th:if="${user.id} == ${purse.createdBy.id}">
+                            <a class="btn btn-primary" th:href="@{/events/{purseId}/new(purseId=${purse.id})}">ADD/WITHDRAW</a>
+                            <a class="btn btn-primary" th:href="@{/purses/{purseId}/delete(purseId=${purse.id})}">DELETE</a>
+                        </div>
                         <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis
                             aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi
                             vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                        <a class="btn btn-primary" href="#!">Read more →</a>
                     </div>
                 </div>
                 <!-- Nested row for non-featured blog posts-->
