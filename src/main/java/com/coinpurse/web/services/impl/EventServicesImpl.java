@@ -9,6 +9,7 @@ import com.coinpurse.web.services.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,13 @@ public class EventServicesImpl implements EventServices {
         Purse purse = purseRepository.findById(purseId).get(); //TODO: This is considered bad practice, <Optional> may be null
         Event event = mapToEvent(eventDto);
         event.setPurse(purse);
+
+        //Get last event by LocalDateTime date, sort to last, and update using that final value
+        Event lastEvent = eventRepository.findLastEventByPurse(purse).get(0);
+        if(lastEvent != null) {
+            event.setFinalvalue(lastEvent.getFinalvalue() + event.getDelta());
+        } //TODO: Implement Exception in case lastEvent is not found
+
         eventRepository.save(event);
     }
 
