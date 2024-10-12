@@ -96,4 +96,9 @@ public class PurseController {
         model.addAttribute("purses", purses);
         return "purses-list";
     }
+
+    @RequestMapping("/")
+    public String landingPage() {
+        return "redirect:/purses";
+    }
 }

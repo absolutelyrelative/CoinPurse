@@ -31,12 +31,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests().requestMatchers("/login", "/register", "/purses",
                         "/css/**", "/js/**", "/purses/**", "/register/**",
-                        "/events", "/events/**") //TODO: Figure out why /events/** isn't covering everything
+                        "/events", "/events/**", "/")
                 .permitAll()
                 .and()
                 .formLogin(form -> form
                                 .loginPage("/login")
-                                .defaultSuccessUrl("/purses")
+                                .defaultSuccessUrl("/purses", true)
                                 .loginProcessingUrl("/login")
                                 .failureUrl("/login?error=true")
                                 .permitAll()

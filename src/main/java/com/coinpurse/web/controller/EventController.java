@@ -3,6 +3,7 @@ package com.coinpurse.web.controller;
 import com.coinpurse.web.dto.EventDto;
 import com.coinpurse.web.dto.PurseDto;
 import com.coinpurse.web.model.Event;
+import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.model.UserEntity;
 import com.coinpurse.web.security.SecurityUtil;
 import com.coinpurse.web.services.EventServices;
