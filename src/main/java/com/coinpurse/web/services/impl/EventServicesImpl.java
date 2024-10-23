@@ -34,10 +34,13 @@ public class EventServicesImpl implements EventServices {
         event.setPurse(purse);
 
         //Get last event by LocalDateTime date, sort to last, and update using that final value
-        Event lastEvent = eventRepository.findLastEventByPurse(purse).get(0);
-        if(lastEvent != null) {
-            event.setFinalvalue(lastEvent.getFinalvalue() + event.getDelta());
-        } //TODO: Implement Exception in case lastEvent is not found
+        List<Event> lastEvent = eventRepository.findLastEventByPurse(purse);
+        if(!lastEvent.isEmpty()) {
+            //TODO: Implement Exception in case lastEvent is not found
+            event.setFinalvalue(lastEvent.get(0).getFinalvalue() + event.getDelta());
+        } else {
+            event.setFinalvalue(event.getDelta());
+        }
 
         eventRepository.save(event);
     }

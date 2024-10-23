@@ -22,6 +22,6 @@ public class EventDto {
     private LocalDateTime updatedon; //TODO: This is generated for now
     private String type; //TODO: Change to enum?
     private Float delta;
-    private Float finalvalue; //TODO: Generate
+    private Float finalvalue;
     private Purse purse;
 }

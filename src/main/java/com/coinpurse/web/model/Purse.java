@@ -25,7 +25,6 @@ public class Purse {
     private String title;
     @CreationTimestamp
     private LocalDateTime creation;
-    private Float amount; //TODO: Remove, replace with 1:N relationship
     private String currency;
 
     @ManyToOne

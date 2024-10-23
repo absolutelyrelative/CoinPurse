@@ -15,8 +15,6 @@ public class PurseDto {
     //@NotEmpty(message = "Purse title should not be empty.")
     private String title;
     private LocalDateTime creation;
-    //@NotEmpty(message = "Starting amount should not be empty.")
-    private Float amount;
     private String currency;
     private UserEntity createdBy;
     private List<EventDto> events;
