@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "purses")
+@Table(name = "Purses")
 public class Purse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

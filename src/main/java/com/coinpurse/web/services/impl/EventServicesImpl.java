@@ -1,6 +1,5 @@
 package com.coinpurse.web.services.impl;
 
-import com.coinpurse.web.dto.EventDto;
 import com.coinpurse.web.model.Event;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.repository.EventRepository;
@@ -9,12 +8,7 @@ import com.coinpurse.web.services.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.coinpurse.web.mapper.EventMapper.mapToEvent;
-import static com.coinpurse.web.mapper.EventMapper.mapToEventDto;
 
 @Service
 public class EventServicesImpl implements EventServices {
@@ -28,9 +22,9 @@ public class EventServicesImpl implements EventServices {
     }
 
     @Override
-    public void createEvent(Long purseId, EventDto eventDto) {
-        Purse purse = purseRepository.findById(purseId).get(); //TODO: This is considered bad practice, <Optional> may be null
-        Event event = mapToEvent(eventDto);
+    public Event createEvent(Purse purse, Event event) {
+        //Purse purse = purseRepository.findById(purse.getId()).get(); //TODO: This is considered bad practice, <Optional> may be null
+        //Event event = eventRepository.findById(event.getId()).get();
         event.setPurse(purse);
 
         //Get last event by LocalDateTime date, sort to last, and update using that final value
@@ -43,29 +37,29 @@ public class EventServicesImpl implements EventServices {
         }
 
         eventRepository.save(event);
+        return event;
     }
 
     @Override
-    public List<EventDto> findAllEvents() {
+    public List<Event> findAllEvents() {
         List<Event> events = eventRepository.findAll();
-        return events.stream().map(event -> mapToEventDto(event)).collect(Collectors.toList());
+        return events;
     }
 
     @Override
-    public EventDto findByEventId(Long eventId) {
+    public Event findByEventId(Long eventId) {
         Event event = eventRepository.findById(eventId).get();
-        return mapToEventDto(event);
+        return event;
     }
 
     @Override
-    public void updatePurse(EventDto eventDto) {
-        Event event = mapToEvent(eventDto);
+    public void updatePurse(Event event) {
         eventRepository.save(event);
     }
 
     @Override
-    public void deleteEvent(Long eventId) {
-        eventRepository.deleteById(eventId);
+    public void deleteEvent(Event event) {
+        eventRepository.deleteById(event.getId());
     }
 
 

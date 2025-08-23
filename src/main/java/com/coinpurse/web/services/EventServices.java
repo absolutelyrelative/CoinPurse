@@ -1,16 +1,17 @@
 package com.coinpurse.web.services;
 
-import com.coinpurse.web.dto.EventDto;
+import com.coinpurse.web.model.Event;
+import com.coinpurse.web.model.Purse;
 
 import java.util.List;
 
 public interface EventServices {
-    void createEvent(Long purseId, EventDto eventDto);
-    List<EventDto> findAllEvents();
+    Event createEvent(Purse purse, Event event);
+    List<Event> findAllEvents();
 
-    EventDto findByEventId(Long eventId);
+    Event findByEventId(Long eventId);
 
-    void updatePurse(EventDto eventDto);
+    void updatePurse(Event event);
 
-    void deleteEvent(Long eventId);
+    void deleteEvent(Event event);
 }

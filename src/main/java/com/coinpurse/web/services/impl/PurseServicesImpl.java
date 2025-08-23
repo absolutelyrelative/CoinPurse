@@ -1,20 +1,13 @@
 package com.coinpurse.web.services.impl;
 
-import com.coinpurse.web.dto.PurseDto;
 import com.coinpurse.web.model.Purse;
-import com.coinpurse.web.model.UserEntity;
 import com.coinpurse.web.repository.PurseRepository;
 import com.coinpurse.web.repository.UserRepository;
-import com.coinpurse.web.security.SecurityUtil;
 import com.coinpurse.web.services.PurseServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.coinpurse.web.mapper.PurseMapper.mapToPurse;
-import static com.coinpurse.web.mapper.PurseMapper.mapToPurseDto;
 
 @Service
 public class PurseServicesImpl implements PurseServices {
@@ -28,32 +21,26 @@ public class PurseServicesImpl implements PurseServices {
     }
 
     @Override
-    public List<PurseDto> findAllPurses() {
+    public List<Purse> findAllPurses() {
         List<Purse> purses = purseRepository.findAll();
-        return purses.stream().map((purse)->mapToPurseDto(purse)).collect(Collectors.toList());
+        return purses;
+        //return purses.stream().map((purse)->mapToPurseDto(purse)).collect(Collectors.toList());
     }
 
     @Override
-    public PurseDto findPurseById(long purseId){
+    public Purse findPurseById(long purseId){
         Purse purse = purseRepository.findById(purseId).get();
-        return mapToPurseDto(purse);
+        return purse;
     }
 
     //Should this be a PurseDto?
     @Override
     public Purse savePurse(Purse purse) {
-        String sessionEmail = SecurityUtil.getSessionUser();
-        UserEntity user = userRepository.findByEmail(sessionEmail);
-        purse.setCreatedBy(user);
         return purseRepository.save(purse);
     }
 
     @Override
-    public void updatePurse(PurseDto purseDto){
-        String sessionEmail = SecurityUtil.getSessionUser();
-        UserEntity user = userRepository.findByEmail(sessionEmail);
-        purseDto.setCreatedBy(user);
-        Purse purse = mapToPurse(purseDto);
+    public void updatePurse(Purse purse){
         purseRepository.save(purse);
     }
 
@@ -63,9 +50,10 @@ public class PurseServicesImpl implements PurseServices {
     }
 
     @Override
-    public List<PurseDto> searchPurse(String query) {
+    public List<Purse> searchPurse(String query) {
         List<Purse> purses = purseRepository.searchPurse(query);
-        return purses.stream().map(purse -> mapToPurseDto(purse)).collect(Collectors.toList());
+        //return purses.stream().map(purse -> mapToPurseDto(purse)).collect(Collectors.toList());
+        return purses;
     }
 
 }

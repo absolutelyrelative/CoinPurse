@@ -6,13 +6,13 @@ import com.coinpurse.web.model.Purse;
 import java.util.List;
 
 public interface PurseServices {
-    List<PurseDto> findAllPurses();
+    List<Purse> findAllPurses();
     Purse savePurse(Purse purse);
 
-    PurseDto findPurseById(long purseId);
+    Purse findPurseById(long purseId);
 
-    void updatePurse(PurseDto purse);
+    void updatePurse(Purse purse);
 
     void delete(long purseId);
-    List<PurseDto> searchPurse(String query);
+    List<Purse> searchPurse(String query);
 }

@@ -3,23 +3,21 @@ package com.coinpurse.web.controller;
 import com.coinpurse.web.dto.RegistrationDto;
 import com.coinpurse.web.model.UserEntity;
 import com.coinpurse.web.services.UserService;
-import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class AuthController {
+    @Autowired
     private UserService userService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping("/register")
+   /* @GetMapping("/register")
     public String getRegisterForm(Model model) {
         RegistrationDto user = new RegistrationDto();
         model.addAttribute("user", user);
@@ -48,5 +46,5 @@ public class AuthController {
     @GetMapping("/login")
     public String loginPage(){
         return "login";
-    }
+    }*/
 }
