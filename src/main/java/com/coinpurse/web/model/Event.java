@@ -28,7 +28,7 @@ public class Event {
     private LocalDateTime updatedon;
     private String type; //TODO: Change to enum?
     private Float delta;
-    private Float finalvalue; //TODO: Generate with annotations?
+    private Float finalValue;
 
     @ManyToOne
     @JoinColumn(name="purse_id", nullable=false)

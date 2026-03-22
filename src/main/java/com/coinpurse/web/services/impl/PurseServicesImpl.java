@@ -24,7 +24,6 @@ public class PurseServicesImpl implements PurseServices {
     public List<Purse> findAllPurses() {
         List<Purse> purses = purseRepository.findAll();
         return purses;
-        //return purses.stream().map((purse)->mapToPurseDto(purse)).collect(Collectors.toList());
     }
 
     @Override
@@ -52,7 +51,6 @@ public class PurseServicesImpl implements PurseServices {
     @Override
     public List<Purse> searchPurse(String query) {
         List<Purse> purses = purseRepository.searchPurse(query);
-        //return purses.stream().map(purse -> mapToPurseDto(purse)).collect(Collectors.toList());
         return purses;
     }
 

@@ -27,9 +27,9 @@ public class Purse {
     private LocalDateTime creation;
     private String currency;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    private UserEntity createdBy;
+//    @ManyToOne
+//    @JoinColumn(name = "created_by", nullable = false)
+//    private UserEntity createdBy;
     @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE)
     private List<Event> events = new ArrayList<>();
 }

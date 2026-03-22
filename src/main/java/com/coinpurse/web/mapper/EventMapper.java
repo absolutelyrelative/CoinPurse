@@ -13,7 +13,7 @@ public class EventMapper {
                 .updatedon(eventDto.getUpdatedon())
                 .type(eventDto.getType())
                 .delta(eventDto.getDelta())
-                .finalvalue(eventDto.getFinalvalue())
+                .finalValue(eventDto.getFinalvalue())
                 .purse(eventDto.getPurse())
                 .build();
     }
@@ -27,7 +27,7 @@ public class EventMapper {
                 .updatedon(event.getUpdatedon())
                 .type(event.getType())
                 .delta(event.getDelta())
-                .finalvalue(event.getFinalvalue())
+                .finalvalue(event.getFinalValue())
                 .purse(event.getPurse())
                 .build();
     }

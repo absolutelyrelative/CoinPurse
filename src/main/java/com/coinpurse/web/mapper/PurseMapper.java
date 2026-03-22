@@ -3,6 +3,9 @@ package com.coinpurse.web.mapper;
 import com.coinpurse.web.dto.PurseDto;
 import com.coinpurse.web.model.Purse;
 
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.coinpurse.web.mapper.EventMapper.mapToEventDto;
@@ -14,7 +17,7 @@ public class PurseMapper {
                 .title(purse.getTitle())
                 .creation(purse.getCreation())
                 .currency(purse.getCurrency())
-                .createdBy(purse.getCreatedBy())
+                //.createdBy(purse.getCreatedBy())
                 .build();
 
         return purseDto;
@@ -26,8 +29,12 @@ public class PurseMapper {
                 .title(purse.getTitle())
                 .creation(purse.getCreation())
                 .currency(purse.getCurrency())
-                .createdBy(purse.getCreatedBy())
-                .events(purse.getEvents().stream().map((event) -> mapToEventDto(event)).collect(Collectors.toList()))
+                //.createdBy(purse.getCreatedBy())
+                .events(Optional.ofNullable(purse.getEvents())
+                        .orElseGet(Collections::emptyList)
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .map(EventMapper::mapToEventDto).collect(Collectors.toList()))
                 .build();
         return purseDto;
     }
