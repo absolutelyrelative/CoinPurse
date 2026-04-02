@@ -9,12 +9,11 @@ public class EventMapper {
                 .id(eventDto.getId())
                 .comment(eventDto.getComment())
                 .date(eventDto.getDate())
-                .createdon(eventDto.getCreatedon())
-                .updatedon(eventDto.getUpdatedon())
                 .type(eventDto.getType())
                 .delta(eventDto.getDelta())
                 .finalValue(eventDto.getFinalvalue())
                 .purse(eventDto.getPurse())
+                .currency(eventDto.getCurrency())
                 .build();
     }
 
@@ -23,12 +22,13 @@ public class EventMapper {
                 .id(event.getId())
                 .comment(event.getComment())
                 .date(event.getDate())
-                .createdon(event.getCreatedon())
-                .updatedon(event.getUpdatedon())
+                .createdOn(event.getCreatedon())
+                .updatedOn(event.getUpdatedon())
                 .type(event.getType())
                 .delta(event.getDelta())
                 .finalvalue(event.getFinalValue())
                 .purse(event.getPurse())
+                .currency(event.getCurrency())
                 .build();
     }
 }

@@ -2,39 +2,26 @@ package com.coinpurse.web.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Builder
-@Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "Events")
-public class Event {
+@Table(name = "Currencies")
+public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String comment;
-    private LocalDateTime date;
+    private String currency;
+    private BigDecimal conversionRatioToEur;
     @CreationTimestamp
     private LocalDateTime createdon;
     @UpdateTimestamp
     private LocalDateTime updatedon;
-    private String type; //TODO: Change to enum?
-    private Float delta;
-    private Float finalValue;
 
-    @ManyToOne
-    @JoinColumn(name="purse_id", nullable=false)
-    private Purse purse;
-
-    @ManyToOne
-    @JoinColumn(name="currency_id", nullable=false)
-    private Currency currency;
 }

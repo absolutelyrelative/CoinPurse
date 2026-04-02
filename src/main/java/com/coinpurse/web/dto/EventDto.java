@@ -1,5 +1,6 @@
 package com.coinpurse.web.dto;
 
+import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.model.Purse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,12 +17,13 @@ import java.time.LocalDateTime;
 public class EventDto {
     private Long id;
     private String comment;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") //For the HTML form
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime date;
-    private LocalDateTime createdon; //TODO: This is generated for now
-    private LocalDateTime updatedon; //TODO: This is generated for now
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
     private String type; //TODO: Change to enum?
     private Float delta;
     private Float finalvalue;
     private Purse purse;
+    private Currency currency;
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/events")
+@RequestMapping(value = "/api/events")
 public class EventController {
     @Autowired
     private EventServices eventServices;

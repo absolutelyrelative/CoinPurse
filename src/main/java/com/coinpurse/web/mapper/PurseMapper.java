@@ -15,7 +15,6 @@ public class PurseMapper {
         Purse purseDto = Purse.builder()
                 .id(purse.getId())
                 .title(purse.getTitle())
-                .creation(purse.getCreation())
                 .currency(purse.getCurrency())
                 //.createdBy(purse.getCreatedBy())
                 .build();
