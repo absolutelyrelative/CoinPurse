@@ -1,10 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import PurseCard from "./components/purses/purse-card/pursecard";
-import PurseList from "./components/purses/purse-list/purselist";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
 import { LineChart } from '@mui/x-charts/LineChart';
 
 function App() {
