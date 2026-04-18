@@ -63,4 +63,15 @@ public class EventController {
                 .toList();
         return ResponseEntity.ok(events);
     }
+
+    @GetMapping(value = "/purse/{purseId}", produces = "application/json")
+    public ResponseEntity<List<EventDto>> getEventListByPurse(@PathVariable Long purseId) {
+        PurseDto purseDto = PurseDto.builder().id(purseId).build();
+        Purse purse = PurseMapper.mapToPurse(purseDto);
+        List<Event>  events = eventServices.getEventsByPurse(purse);
+        List<EventDto>  eventDtos = events.stream().map(EventMapper::mapToEventListDto)
+                .toList();
+
+        return ResponseEntity.ok(eventDtos);
+    }
 }

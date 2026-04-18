@@ -17,4 +17,7 @@ public interface EventServices {
     void deleteEvent(Event event);
 
     List<Event> getAllEventsByDateAndCurrency(String currency);
+
+    List<Event> getEventsByPurse(Purse purse);
+
 }

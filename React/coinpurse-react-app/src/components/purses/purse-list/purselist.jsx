@@ -4,7 +4,7 @@ import CreatePurse from "../purse-modals/createpurse";
 import axios from "axios";
 import { PURSE_LIST } from "../../../constants/constants";
 import Stack from "react-bootstrap/Stack";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 
 function PurseList() {
 
@@ -38,7 +38,7 @@ function PurseList() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <Container>
       <h1>Purses</h1>
       <Button variant="primary" onClick={handleShow}>Create purse</Button>
       <CreatePurse show = {show} handleClose = {handleClose} ></CreatePurse>
@@ -48,7 +48,7 @@ function PurseList() {
           <PurseCard purse={purse} key={purse.id}></PurseCard>
         ))}
       </Stack>
-    </div>
+    </Container>
   );
 }
 

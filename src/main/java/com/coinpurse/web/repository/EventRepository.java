@@ -17,4 +17,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByCurrency(String currency, Pageable pageable);
 
+    List<Event> getEventsByPurse(Purse purse);
 }
