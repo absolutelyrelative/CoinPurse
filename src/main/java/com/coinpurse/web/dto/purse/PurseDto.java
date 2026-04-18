@@ -1,5 +1,6 @@
-package com.coinpurse.web.dto;
+package com.coinpurse.web.dto.purse;
 
+import com.coinpurse.web.dto.event.EventDto;
 import com.coinpurse.web.model.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.List;
 public class PurseDto {
     private Long id;
     private String title;
+    private String description;
     private LocalDateTime creation;
     private String currency;
     private UserEntity createdBy;

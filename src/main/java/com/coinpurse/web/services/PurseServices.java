@@ -1,6 +1,5 @@
 package com.coinpurse.web.services;
 
-import com.coinpurse.web.dto.PurseDto;
 import com.coinpurse.web.model.Purse;
 
 import java.util.List;

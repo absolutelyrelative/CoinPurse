@@ -9,6 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
@@ -24,7 +25,10 @@ public class SecurityConfig {
                .anyRequest().authenticated()
        );
 
-       http.cors(cors -> corsConfigurationSource());
+       // Disabled until tokens are implemented
+       http.csrf(AbstractHttpConfigurer::disable);
+
+       http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
        return http.build();
     }
@@ -35,6 +39,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:[*]", "http://127.0.0.1:[*]"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

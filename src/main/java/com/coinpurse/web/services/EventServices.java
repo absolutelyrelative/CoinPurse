@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface EventServices {
     Event createEvent(Purse purse, Event event);
+
     List<Event> findAllEvents();
 
     Event findByEventId(Long eventId);
@@ -14,4 +15,6 @@ public interface EventServices {
     void updatePurse(Event event);
 
     void deleteEvent(Event event);
+
+    List<Event> getAllEventsByDateAndCurrency(String currency);
 }

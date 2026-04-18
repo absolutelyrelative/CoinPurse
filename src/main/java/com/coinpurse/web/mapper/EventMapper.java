@@ -1,7 +1,13 @@
 package com.coinpurse.web.mapper;
 
-import com.coinpurse.web.dto.EventDto;
+import com.coinpurse.web.dto.event.EventDto;
+import com.coinpurse.web.dto.event.SummaryEventDto;
 import com.coinpurse.web.model.Event;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EventMapper {
     public static Event mapToEvent(EventDto eventDto) {

@@ -1,4 +1,4 @@
-package com.coinpurse.web.dto;
+package com.coinpurse.web.dto.event;
 
 import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.model.Purse;

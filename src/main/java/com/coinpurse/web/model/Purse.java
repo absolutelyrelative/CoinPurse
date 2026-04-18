@@ -23,6 +23,7 @@ public class Purse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private String description;
     @CreationTimestamp
     private LocalDateTime creation;
     private String currency;

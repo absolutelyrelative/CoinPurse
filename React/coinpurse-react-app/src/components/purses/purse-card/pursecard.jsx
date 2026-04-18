@@ -7,6 +7,7 @@ function PurseCard({ purse }) {
       <Card.Img variant="top" />
       <Card.Body>
         <Card.Title>{purse.title}</Card.Title>
+        <Card.Text>{purse.description}</Card.Text>
         <Card.Text>{purse.creation}</Card.Text>
         <Button variant="primary" >
           Open purse

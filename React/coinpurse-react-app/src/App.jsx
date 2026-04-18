@@ -1,13 +1,15 @@
 import { useState } from "react";
+import Nav from 'react-bootstrap/Nav';
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { LineChart } from '@mui/x-charts/LineChart';
+import { Link } from "react-router-dom";
 
 function App() {
   return (
     <>
       <section id="center">
-        <h2>Tests</h2>
+        <h2>All movements</h2>
         
       </section>
       <LineChart

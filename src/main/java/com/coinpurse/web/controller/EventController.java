@@ -1,7 +1,7 @@
 package com.coinpurse.web.controller;
 
-import com.coinpurse.web.dto.EventDto;
-import com.coinpurse.web.dto.PurseDto;
+import com.coinpurse.web.dto.event.EventDto;
+import com.coinpurse.web.dto.purse.PurseDto;
 import com.coinpurse.web.mapper.EventMapper;
 import com.coinpurse.web.mapper.PurseMapper;
 import com.coinpurse.web.model.Event;
@@ -55,5 +55,12 @@ public class EventController {
     public ResponseEntity<String> deleteEvent(@PathVariable("eventId") Long eventId) {
         eventServices.deleteEvent(eventServices.findByEventId(eventId));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/summary", produces = "application/json")
+    public ResponseEntity<List<EventDto>> getSummary() {
+        List<EventDto> events = eventServices.getAllEventsByDateAndCurrency("").stream().map(EventMapper::mapToEventDto)
+                .toList();
+        return ResponseEntity.ok(events);
     }
 }
