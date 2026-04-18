@@ -1,5 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import { Link } from "react-router-dom";
 
 function PurseCard({ purse }) {
   return (
@@ -9,7 +10,7 @@ function PurseCard({ purse }) {
         <Card.Title>{purse.title}</Card.Title>
         <Card.Text>{purse.description}</Card.Text>
         <Card.Text>{purse.creation}</Card.Text>
-        <Button variant="primary" >
+        <Button variant="primary" as={Link} to={`/purse/${purse.id}`}>
           Open purse
         </Button>
       </Card.Body>

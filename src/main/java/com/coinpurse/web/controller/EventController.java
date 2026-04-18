@@ -34,7 +34,7 @@ public class EventController {
 
     @GetMapping(value = "/list", produces = "application/json")
     public ResponseEntity<List<EventDto>> eventList() {
-       List<EventDto> events = eventServices.findAllEvents().stream().map(EventMapper::mapToEventDto)
+       List<EventDto> events = eventServices.findAllEvents().stream().map(EventMapper::mapToEventListDto)
                .toList();
        return ResponseEntity.ok(events);
     }

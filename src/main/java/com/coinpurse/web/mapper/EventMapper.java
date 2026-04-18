@@ -1,13 +1,7 @@
 package com.coinpurse.web.mapper;
 
 import com.coinpurse.web.dto.event.EventDto;
-import com.coinpurse.web.dto.event.SummaryEventDto;
 import com.coinpurse.web.model.Event;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class EventMapper {
     public static Event mapToEvent(EventDto eventDto) {
@@ -34,6 +28,20 @@ public class EventMapper {
                 .delta(event.getDelta())
                 .finalvalue(event.getFinalValue())
                 .purse(event.getPurse())
+                .currency(event.getCurrency())
+                .build();
+    }
+
+    public static EventDto mapToEventListDto(Event event) {
+        return EventDto.builder()
+                .id(event.getId())
+                .comment(event.getComment())
+                .date(event.getDate())
+                .createdOn(event.getCreatedon())
+                .updatedOn(event.getUpdatedon())
+                .type(event.getType())
+                .delta(event.getDelta())
+                .finalvalue(event.getFinalValue())
                 .currency(event.getCurrency())
                 .build();
     }

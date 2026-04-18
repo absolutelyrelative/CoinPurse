@@ -30,11 +30,11 @@ public class Event {
     private Float delta;
     private Float finalValue;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="purse_id", nullable=false)
     private Purse purse;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="currency_id", nullable=false)
     private Currency currency;
 }
