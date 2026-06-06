@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -57,6 +60,26 @@ public class EventServicesImpl implements EventServices {
     @Override
     public void deleteEvent(Event event) {
         eventRepository.deleteById(event.getId());
+    }
+
+    @Override
+    public List<Event> getAllEventsByDateAndCurrency(String currency) {
+        List<Event> allEvents =  eventRepository.findAllByCurrency(currency, null);
+
+        // Truncate to Days
+        allEvents.forEach(event -> {
+            event.setDate(event.getDate().truncatedTo(ChronoUnit.DAYS));
+        });
+
+        return allEvents;
+    }
+
+    @Override
+    public List<Event> getEventsByPurse(Purse purse) {
+        List<Event> events = eventRepository.getEventsByPurse(purse);
+        Collections.sort(events, Comparator.comparing(Event::getDate));
+
+        return events;
     }
 
 

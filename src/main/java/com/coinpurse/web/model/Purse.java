@@ -23,6 +23,7 @@ public class Purse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private String description;
     @CreationTimestamp
     private LocalDateTime creation;
     private String currency;
@@ -30,6 +31,6 @@ public class Purse {
 //    @ManyToOne
 //    @JoinColumn(name = "created_by", nullable = false)
 //    private UserEntity createdBy;
-    @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Event> events = new ArrayList<>();
 }

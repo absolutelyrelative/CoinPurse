@@ -1,7 +1,7 @@
 package com.coinpurse.web.controller;
 
-import com.coinpurse.web.dto.EventDto;
-import com.coinpurse.web.dto.PurseDto;
+import com.coinpurse.web.dto.event.EventDto;
+import com.coinpurse.web.dto.purse.PurseDto;
 import com.coinpurse.web.mapper.EventMapper;
 import com.coinpurse.web.mapper.PurseMapper;
 import com.coinpurse.web.model.Event;
@@ -22,9 +22,9 @@ public class EventController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/{purseId}/new", produces = "application/json")
-    public ResponseEntity<EventDto> createEvent(@PathVariable("purseId") Long purseId, @RequestBody EventDto eventDto) {
-        PurseDto purseDto = PurseDto.builder().id(purseId).build();
+    @PostMapping(value = "/new", produces = "application/json")
+    public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) {
+        PurseDto purseDto = PurseDto.builder().id(eventDto.getPurse().getId()).build();
         Purse purse = PurseMapper.mapToPurse(purseDto);
         Event event = EventMapper.mapToEvent(eventDto);
 
@@ -34,7 +34,7 @@ public class EventController {
 
     @GetMapping(value = "/list", produces = "application/json")
     public ResponseEntity<List<EventDto>> eventList() {
-       List<EventDto> events = eventServices.findAllEvents().stream().map(EventMapper::mapToEventDto)
+       List<EventDto> events = eventServices.findAllEvents().stream().map(EventMapper::mapToEventListDto)
                .toList();
        return ResponseEntity.ok(events);
     }
@@ -55,5 +55,23 @@ public class EventController {
     public ResponseEntity<String> deleteEvent(@PathVariable("eventId") Long eventId) {
         eventServices.deleteEvent(eventServices.findByEventId(eventId));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/summary", produces = "application/json")
+    public ResponseEntity<List<EventDto>> getSummary() {
+        List<EventDto> events = eventServices.getAllEventsByDateAndCurrency("").stream().map(EventMapper::mapToEventDto)
+                .toList();
+        return ResponseEntity.ok(events);
+    }
+
+    @GetMapping(value = "/purse/{purseId}", produces = "application/json")
+    public ResponseEntity<List<EventDto>> getEventListByPurse(@PathVariable Long purseId) {
+        PurseDto purseDto = PurseDto.builder().id(purseId).build();
+        Purse purse = PurseMapper.mapToPurse(purseDto);
+        List<Event>  events = eventServices.getEventsByPurse(purse);
+        List<EventDto>  eventDtos = events.stream().map(EventMapper::mapToEventListDto)
+                .toList();
+
+        return ResponseEntity.ok(eventDtos);
     }
 }

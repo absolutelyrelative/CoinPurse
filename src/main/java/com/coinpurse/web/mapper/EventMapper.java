@@ -1,6 +1,6 @@
 package com.coinpurse.web.mapper;
 
-import com.coinpurse.web.dto.EventDto;
+import com.coinpurse.web.dto.event.EventDto;
 import com.coinpurse.web.model.Event;
 
 public class EventMapper {
@@ -28,6 +28,20 @@ public class EventMapper {
                 .delta(event.getDelta())
                 .finalvalue(event.getFinalValue())
                 .purse(event.getPurse())
+                .currency(event.getCurrency())
+                .build();
+    }
+
+    public static EventDto mapToEventListDto(Event event) {
+        return EventDto.builder()
+                .id(event.getId())
+                .comment(event.getComment())
+                .date(event.getDate())
+                .createdOn(event.getCreatedon())
+                .updatedOn(event.getUpdatedon())
+                .type(event.getType())
+                .delta(event.getDelta())
+                .finalvalue(event.getFinalValue())
                 .currency(event.getCurrency())
                 .build();
     }

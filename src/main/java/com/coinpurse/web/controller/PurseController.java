@@ -1,6 +1,7 @@
 package com.coinpurse.web.controller;
 
-import com.coinpurse.web.dto.PurseDto;
+import com.coinpurse.web.dto.purse.PurseDto;
+import com.coinpurse.web.dto.purse.PurseListDto;
 import com.coinpurse.web.mapper.PurseMapper;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.services.PurseServices;
@@ -19,7 +20,7 @@ public class PurseController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/new", produces = "application/json")
+    @PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
     public ResponseEntity<PurseDto> createPurse(@RequestBody PurseDto purseDto) {
         Purse purse = PurseMapper.mapToPurse(purseDto);
 
@@ -28,8 +29,8 @@ public class PurseController {
     }
 
     @GetMapping(value = "/list", produces = "application/json")
-    public ResponseEntity<List<PurseDto>> purseList() {
-        List<PurseDto> purses = purseServices.findAllPurses().stream().map(PurseMapper::mapToPurseDto)
+    public ResponseEntity<List<PurseListDto>> purseList() {
+        List<PurseListDto> purses = purseServices.findAllPurses().stream().map(PurseMapper::mapToPurseListDto)
                 .toList();
         return ResponseEntity.ok(purses);
     }
