@@ -22,9 +22,9 @@ public class EventController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/{purseId}/new", produces = "application/json")
-    public ResponseEntity<EventDto> createEvent(@PathVariable("purseId") Long purseId, @RequestBody EventDto eventDto) {
-        PurseDto purseDto = PurseDto.builder().id(purseId).build();
+    @PostMapping(value = "/new", produces = "application/json")
+    public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) {
+        PurseDto purseDto = PurseDto.builder().id(eventDto.getPurse().getId()).build();
         Purse purse = PurseMapper.mapToPurse(purseDto);
         Event event = EventMapper.mapToEvent(eventDto);
 

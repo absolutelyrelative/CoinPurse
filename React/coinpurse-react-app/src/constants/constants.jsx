@@ -8,3 +8,4 @@ export const PURSE_SAVE = BACKEND_API_URL + "/purses/new"
 // Events mappings
 export const EVENTS_LIST = BACKEND_API_URL + "/events/list"
 export const EVENTS_LIST_BY_PURSE = BACKEND_API_URL + "/events/purse/"
+export const EVENT_SAVE = BACKEND_API_URL + "/events/new"

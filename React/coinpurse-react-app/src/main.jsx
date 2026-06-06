@@ -9,7 +9,7 @@ import NavBar from "./components/navbar/navbar.jsx";
 import EventsList from "./components/events/events-list/eventslist.jsx";
 
 const router = createBrowserRouter([
-  {
+  { // route 1
     element: <NavBar></NavBar>,
     children: [
       { path: "/", element: <App /> },
