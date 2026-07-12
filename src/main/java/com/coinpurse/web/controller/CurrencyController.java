@@ -22,7 +22,7 @@ public class CurrencyController {
 
     @PostMapping(value = "/refresh")
     public void refreshCurrencies() {
-        currencyServices.getAllCurrencies(LocalDate.now());
+        currencyServices.refreshCurrencies(LocalDate.now());
     }
 
 }
