@@ -1,0 +1,1 @@
+export const NUMBER_FORMAT_ERROR = "Invalid number";
