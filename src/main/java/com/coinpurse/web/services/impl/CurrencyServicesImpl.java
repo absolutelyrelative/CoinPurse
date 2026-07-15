@@ -58,6 +58,11 @@ public class CurrencyServicesImpl implements CurrencyServices {
         return currencyMap;
     }
 
+    @Override
+    public List<Currency> getAllCurrencies() {
+        return currencyRepository.findAll();
+    }
+
     // From a map of currencies, create and add any non-existing ones
     public void addMissingCurrencies(Map<String, String> currencies) {
         List<Currency> currencyList = getCurrencies();

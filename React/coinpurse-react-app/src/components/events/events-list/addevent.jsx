@@ -47,7 +47,7 @@ function AddEvent({ purseId , sendDataToParent}) {
                 currency: {
                     id: 1
                 }
-            })
+            }, )
                 .then(function (response) {
                     if(response.status == 200) {
                         // Refresh page
