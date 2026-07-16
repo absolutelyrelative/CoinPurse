@@ -12,3 +12,4 @@ export const EVENT_SAVE = BACKEND_API_URL + "/events/new"
 
 // Currencies mappings
 export const CURRENCIES_LIST = BACKEND_API_URL + "/currencies/list"
+export const CURRENCIES_UPDATE = BACKEND_API_URL + "/currencies/refresh"

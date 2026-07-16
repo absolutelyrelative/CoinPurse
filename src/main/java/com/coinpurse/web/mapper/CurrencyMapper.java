@@ -9,7 +9,7 @@ public class CurrencyMapper {
                 .id(currency.getId())
                 .currencyDescription(currency.getCurrencyDescription())
                 .currency(currency.getCurrency())
-                .createdon(currency.getCreatedon())
+                .updatedOn(currency.getUpdatedon())
                 .build();
     }
 }

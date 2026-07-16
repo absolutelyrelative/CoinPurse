@@ -17,5 +17,5 @@ public class CurrencyDto {
     private String currency;
     private String currencyDescription;
     private BigDecimal conversionRatioToEur;
-    private LocalDateTime createdon;
+    private LocalDateTime updatedOn;
 }

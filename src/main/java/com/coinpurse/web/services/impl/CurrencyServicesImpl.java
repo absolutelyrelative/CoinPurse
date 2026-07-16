@@ -15,6 +15,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -81,6 +82,10 @@ public class CurrencyServicesImpl implements CurrencyServices {
         }
 
         currencyRepository.saveAll(missingCurrencies);
+
+        // Update existing currencies
+        currencyList.forEach(currency -> currency.setUpdatedon(LocalDateTime.now()));
+        currencyRepository.saveAll(currencyList);
     }
 
     // return all currencies
