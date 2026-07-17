@@ -13,7 +13,7 @@ function PurseCard({ purse }) {
         <Button variant="primary" as={Link} to={`/purse/${purse.id}`}>
           Open purse
         </Button>
-      </Card.Body>
+      </Card.Body>Ō
     </Card>
   );
 }
