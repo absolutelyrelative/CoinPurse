@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { EVENT_SAVE } from "../../../constants/constants";
+import { EVENT_SAVE, CURRENCIES_LIST } from "../../../constants/constants";
 import { NUMBER_FORMAT_ERROR } from "../../../constants/messages";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -7,20 +7,42 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import axios from "axios";
 
 function handleDate(inputDate, setDateFunction) {
-    let isoDate;
+    console.log("input:", inputDate);
+
+    let isoDate = inputDate;
+
     if(inputDate == null || isNaN(Date.parse(inputDate))) {
         isoDate = new Date(Date.now()).toISOString();
     }
+
+    console.log("setting:", isoDate);
+
     setDateFunction(isoDate);
 }
 
-function handleValidation(eventDate, eventComment, eventChange, setValidated) {
+function handleValidation(eventDate, eventComment, eventChange, setEventDate, setValidated) {
     if(eventChange == null || isNaN(parseFloat(eventChange))) {
         setValidated(false);
         return false;
     }
+    handleDate(eventDate, setEventDate);
     return true;
 }
+
+async function fetchCurrencies(setCurrencies){
+    try {
+        const response = await fetch(CURRENCIES_LIST);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCurrencies(data);
+    } catch (error) {
+        console.error("Failed to fetch currencies:", error);
+    }
+};
 
 function AddEvent({ purseId , sendDataToParent}) {
     var url = EVENT_SAVE;
@@ -30,22 +52,30 @@ function AddEvent({ purseId , sendDataToParent}) {
     const [eventComment, setEventComment] = useState('');
     const [eventChange, setEventChange] = useState('');
     const [validated, setValidated] = useState(false);
+    const [currencies, setCurrencies] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState(null);
 
     // Refresh table
     const [refreshTableData, setRefreshTableData] = useState(false);
 
+    // Refresh currencies
+    useEffect(() => {
+        fetchCurrencies(setCurrencies);
+    }, []);
+
     // Post data
     function postData() {
-        if(handleValidation(eventDate, eventComment, eventChange, setValidated)) {
+        if(handleValidation(eventDate, eventComment, eventChange, setEventDate, setValidated)) {
+            console.log("Posting with ", eventDate);
             axios.post(url, {
                 comment: eventComment,
-                    date: new Date(eventDate),
+                date: new Date(eventDate),
                 delta: eventChange,
                 purse: {
                     id: purseId
                 },
                 currency: {
-                    id: 1
+                    id: selectedCurrency
                 }
             }, )
                 .then(function (response) {
@@ -66,9 +96,11 @@ function AddEvent({ purseId , sendDataToParent}) {
 
         <Form validated={validated}>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                <Form.Control type="textarea" placeholder="Date" name="date"
-                              value={eventDate} onChange={ e =>
-                                            handleDate(e.target.value, setEventDate ) }/>
+                <Form.Control type="datetime-local" placeholder="Date" name="date"
+                              value={eventDate} onChange={e => {
+                    console.log("New value:", e.target.value);
+                    setEventDate(e.target.value);
+                }}/>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -83,6 +115,11 @@ function AddEvent({ purseId , sendDataToParent}) {
                     {NUMBER_FORMAT_ERROR}
                 </Form.Control.Feedback>
             </Form.Group>
+            <Form.Select aria-label="Default select example" onChange={e => setSelectedCurrency(e.target.value)}>
+                {currencies.map((currency) => (
+                        <option value={currency.id}>{currency.currency}</option>
+                ))}
+            </Form.Select>
             <Button variant="success" onClick={postData}>Add</Button>
         </Form>
     );
