@@ -1,0 +1,7 @@
+# yml used only to fetch necessary configuration not overridden by application.properties
+currency:
+  service:
+    base-url: "https://api.currencyapi.com"
+    endpoints:
+      all-currencies: "currencies"
+    api-version: "v1"
