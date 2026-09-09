@@ -1,62 +1,44 @@
 package com.coinpurse.web.services.impl;
 
-import com.coinpurse.web.dto.currency.CurrencyDto;
+import com.coinpurse.web.infrastructure.client.CurrencyApiClient;
 import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.repository.CurrencyRepository;
 import com.coinpurse.web.services.CurrencyServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
-import tools.jackson.databind.ObjectMapper;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.coinpurse.web.constants.RestConstants.*;
-import static tools.jackson.databind.type.LogicalType.Map;
 
 @Service
 public class CurrencyServicesImpl implements CurrencyServices {
 
-    private final WebClient webClient;
+    private static final Logger log = LoggerFactory.getLogger(CurrencyServicesImpl.class);
+    private final CurrencyApiClient currencyApiClient;
     private final CurrencyRepository currencyRepository;
 
     @Autowired
-    public CurrencyServicesImpl(CurrencyRepository currencyRepository) {
-        this.webClient = WebClient.builder().baseUrl(CURRENCY_SERVICE).build();
+    public CurrencyServicesImpl(CurrencyApiClient currencyApiClient, CurrencyRepository currencyRepository) {
+        this.currencyApiClient = currencyApiClient;
         this.currencyRepository = currencyRepository;
     }
 
     // Return and populate list of all currencies
-    public Map<String, String> refreshCurrencies(LocalDate localDate) {
-        Map<String, String> currencyMap = new HashMap<String, String>();
+    @Override
+    @Transactional
+    public Mono<Map<String, String>> refreshCurrencies(LocalDate localDate) {
+        currencyApiClient.fetchCurrenciesByDate(localDate)
+            .map(fetchedMono -> {
+                addMissingCurrencies(fetchedMono);
+                return fetchedMono;
+            });
 
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String formattedString = localDate.format(formatter);
-
-            Mono<Map<String, String>> response = webClient.get()
-                    .uri(String.format(CURRENCY_VARS, formattedString,
-                            CURRENCY_API_VERSION, CURRENCY_API_ENDPOINT_ALL_CURRENCIES))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {});
-
-            currencyMap = response.block();
-        } catch (DateTimeException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        addMissingCurrencies(currencyMap);
-        return currencyMap;
+        return Mono.just(Collections.emptyMap());
     }
 
     @Override
