@@ -1,6 +1,5 @@
 package com.coinpurse.web.services.impl;
 
-import com.coinpurse.web.dto.currency.CurrencyDto;
 import com.coinpurse.web.infrastructure.client.CurrencyApiClient;
 import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.repository.CurrencyRepository;
@@ -8,24 +7,13 @@ import com.coinpurse.web.services.CurrencyServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import tools.jackson.databind.ObjectMapper;
 
-import java.beans.Transient;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.coinpurse.web.constants.RestConstants.*;
-import static tools.jackson.databind.type.LogicalType.Map;
 
 @Service
 public class CurrencyServicesImpl implements CurrencyServices {
@@ -43,13 +31,14 @@ public class CurrencyServicesImpl implements CurrencyServices {
     // Return and populate list of all currencies
     @Override
     @Transactional
-    public Map<String, String> refreshCurrencies(LocalDate localDate) {
-        Map<String, String> currencyMap = new HashMap<String, String>();
+    public Mono<Map<String, String>> refreshCurrencies(LocalDate localDate) {
+        currencyApiClient.fetchCurrenciesByDate(localDate)
+            .map(fetchedMono -> {
+                addMissingCurrencies(fetchedMono);
+                return fetchedMono;
+            });
 
-        // TODO: Current way blocks and is not async
-        currencyMap = currencyApiClient.fetchCurrenciesByDate(localDate).block();
-        addMissingCurrencies(currencyMap);
-        return currencyMap;
+        return Mono.just(Collections.emptyMap());
     }
 
     @Override
