@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +48,17 @@ public class PurseServicesImplTest {
         assertNotNull(result); // Saved result must not be null
         assertEquals(purse.getId(), result.getId()); // The id must match the stubbed obj
         verify(purseRepository).save(purse); // Make sure save was actually called at least once
+    }
+
+    @Test
+    void findPurseById_findsAPurse() {
+        // Set up default object to return on findById
+        when(purseRepository.findById(any(Long.class))).thenReturn(Optional.of(purse));
+
+        // Try to find purse
+        Purse result = purseServices.findPurseById(1L);
+        assertNotNull(result);
+        assertEquals(purse, result);
     }
 
 }

@@ -1,7 +1,8 @@
 # yml used only to fetch necessary configuration not overridden by application.properties
 currency:
   service:
-    base-url: "https://api.currencyapi.com"
+    base-url: "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api"
     endpoints:
       all-currencies: "currencies"
+      currency: "eur"
     api-version: "v1"

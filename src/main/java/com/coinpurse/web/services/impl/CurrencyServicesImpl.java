@@ -1,6 +1,7 @@
 package com.coinpurse.web.services.impl;
 
 import com.coinpurse.web.infrastructure.client.CurrencyApiClient;
+import com.coinpurse.web.infrastructure.dto.ExchangeRatioDTO;
 import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.repository.CurrencyRepository;
 import com.coinpurse.web.services.CurrencyServices;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,13 +34,11 @@ public class CurrencyServicesImpl implements CurrencyServices {
     @Override
     @Transactional
     public Mono<Map<String, String>> refreshCurrencies(LocalDate localDate) {
-        currencyApiClient.fetchCurrenciesByDate(localDate)
+        return currencyApiClient.fetchCurrenciesByDate(localDate)
             .map(fetchedMono -> {
                 addMissingCurrencies(fetchedMono);
                 return fetchedMono;
             });
-
-        return Mono.just(Collections.emptyMap());
     }
 
     @Override
@@ -48,6 +48,7 @@ public class CurrencyServicesImpl implements CurrencyServices {
 
     // From a map of currencies, create and add any non-existing ones
     public void addMissingCurrencies(Map<String, String> currencies) {
+        log.info("Currencies are missing");
         List<Currency> currencyList = getCurrencies();
         List<Currency> missingCurrencies = new ArrayList<>();
 
@@ -63,11 +64,32 @@ public class CurrencyServicesImpl implements CurrencyServices {
             }
         }
 
+        refreshExchangeRates(currencyList);
+        // TODO: Move outside method post exchange rate refresh
         currencyRepository.saveAll(missingCurrencies);
 
         // Update existing currencies
         currencyList.forEach(currency -> currency.setUpdatedon(LocalDateTime.now()));
         currencyRepository.saveAll(currencyList);
+    }
+
+    // refresh all exchange rates
+    public List<Currency> refreshExchangeRates(List<Currency> currencies) {
+        Mono<ExchangeRatioDTO> exchangeRatioResponse = currencyApiClient.refreshCurrencyExchangeRates();
+
+        exchangeRatioResponse.subscribe(
+                dto -> {
+                    // with the fetched Mono, update currencies
+                    currencies.forEach( currency -> {
+                                // find the relevant currency if available
+                                BigDecimal conversionValue = dto.getRatio().get(currency.getCurrency());
+                                if(conversionValue == null) { conversionValue = BigDecimal.ZERO; }
+                                currency.setConversionRatioToEur(conversionValue);
+                            });
+                }
+        );
+
+        return currencies;
     }
 
     // return all currencies

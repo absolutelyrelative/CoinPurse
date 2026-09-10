@@ -1,5 +1,6 @@
 package com.coinpurse.web.infrastructure.client;
 
+import com.coinpurse.web.infrastructure.dto.ExchangeRatioDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,14 +23,17 @@ public class CurrencyApiClient {
     private final WebClient webClient;
     private final String apiVersion;
     private final String endpointAllCurrencies;
+    private final String currency;
 
     public CurrencyApiClient(
             @Value("${currency.service.base-url}") String baseUrl,
             @Value("${currency.service.api-version:v1}") String apiVersion,
-            @Value("${currency.service.endpoints.all-currencies}") String endpointAllCurrencies) {
+            @Value("${currency.service.endpoints.all-currencies}") String endpointAllCurrencies,
+            @Value("${currency.service.endpoints.currency}") String currency) {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
         this.apiVersion = apiVersion;
         this.endpointAllCurrencies = endpointAllCurrencies;
+        this.currency = currency;
     }
 
     // Refactor to using Mono for a reactive / async approach to data fetch
@@ -43,8 +47,8 @@ public class CurrencyApiClient {
 
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/{apiVersion}/{endpoint}")
-                        .queryParam("date", formattedDate)
+                        .path("@latest/{apiVersion}/{endpoint}")
+                        //.queryParam("date", formattedDate)
                         .build(apiVersion, endpointAllCurrencies))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -58,5 +62,31 @@ public class CurrencyApiClient {
                     log.error("Unexpected error fetching currencies for date {}: {}", formattedDate, ex.getMessage(), ex);
                     return Mono.just(Collections.emptyMap());
                 });
+    }
+
+    /**
+     * Refresh currency conversion
+     * @return a promise to a DTO containing Exchange Ratio DTO
+     */
+    public Mono<ExchangeRatioDTO> refreshCurrencyExchangeRates() {
+        return webClient.get()
+                .uri(
+                        uriBuilder -> uriBuilder
+                                .path("@latest/{apiVersion}/{endpoint}/{currency}.json")
+                                .build(apiVersion, endpointAllCurrencies, currency)
+                )
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(ExchangeRatioDTO.class)
+                .log()
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    log.error("HTTP Error fetching currencies for date {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+                    return Mono.just(new ExchangeRatioDTO());
+                })
+                .onErrorResume(ex -> {
+                    log.error("Unexpected error fetching currencies for date: {}", ex.getMessage(), ex);
+                    return Mono.just(new ExchangeRatioDTO());
+                })
+                .log("Completed!");
     }
 }
