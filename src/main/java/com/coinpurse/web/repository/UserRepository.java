@@ -1,14 +1,14 @@
 package com.coinpurse.web.repository;
 
-import com.coinpurse.web.model.UserEntity;
+import com.coinpurse.web.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    UserEntity findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByEmail(String email);
 
-    UserEntity findByUsername(String username);
+    User findByUsername(String username);
 
-    UserEntity findFirstByUsername(String username);
+    User findFirstByUsername(String username);
 }

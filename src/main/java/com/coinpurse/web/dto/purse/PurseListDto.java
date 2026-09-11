@@ -1,6 +1,6 @@
 package com.coinpurse.web.dto.purse;
 
-import com.coinpurse.web.model.UserEntity;
+import com.coinpurse.web.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +18,5 @@ public class PurseListDto {
     private String description;
     private LocalDateTime creation;
     private String currency;
-    private UserEntity createdBy;
+    private User createdBy;
 }

@@ -48,7 +48,6 @@ public class CurrencyServicesImpl implements CurrencyServices {
 
     // From a map of currencies, create and add any non-existing ones
     public void addMissingCurrencies(Map<String, String> currencies) {
-        log.info("Currencies are missing");
         List<Currency> currencyList = getCurrencies();
         List<Currency> missingCurrencies = new ArrayList<>();
 
@@ -64,32 +63,32 @@ public class CurrencyServicesImpl implements CurrencyServices {
             }
         }
 
-        refreshExchangeRates(currencyList);
-        // TODO: Move outside method post exchange rate refresh
-        currencyRepository.saveAll(missingCurrencies);
-
-        // Update existing currencies
-        currencyList.forEach(currency -> currency.setUpdatedon(LocalDateTime.now()));
-        currencyRepository.saveAll(currencyList);
+        // Refresh values for existing curencyList
+        refreshExchangeRates(currencyList).subscribe(currencyRepository::saveAll);
+        // Refresh values for missing curencyList
+        refreshExchangeRates(missingCurrencies).subscribe(currencyRepository::saveAll);
     }
 
     // refresh all exchange rates
-    public List<Currency> refreshExchangeRates(List<Currency> currencies) {
+    public Mono<List<Currency>> refreshExchangeRates(List<Currency> currencies) {
         Mono<ExchangeRatioDTO> exchangeRatioResponse = currencyApiClient.refreshCurrencyExchangeRates();
 
-        exchangeRatioResponse.subscribe(
+        exchangeRatioResponse.map(
                 dto -> {
                     // with the fetched Mono, update currencies
                     currencies.forEach( currency -> {
-                                // find the relevant currency if available
-                                BigDecimal conversionValue = dto.getRatio().get(currency.getCurrency());
-                                if(conversionValue == null) { conversionValue = BigDecimal.ZERO; }
-                                currency.setConversionRatioToEur(conversionValue);
-                            });
+                        // find the relevant currency if available
+                        BigDecimal conversionValue = dto.getRatio().get(currency.getCurrency());
+                        if(conversionValue == null) { conversionValue = BigDecimal.ZERO; }
+                        currency.setConversionRatioToEur(conversionValue);
+                        currency.setUpdatedon(LocalDateTime.now());
+                    });
+
+                    return currencies;
                 }
         );
 
-        return currencies;
+        return Mono.empty();
     }
 
     // return all currencies

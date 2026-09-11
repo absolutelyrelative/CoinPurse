@@ -1,12 +1,12 @@
 package com.coinpurse.web.services;
 
-import com.coinpurse.web.dto.RegistrationDto;
-import com.coinpurse.web.model.UserEntity;
+import com.coinpurse.web.dto.user.RegistrationDto;
+import com.coinpurse.web.model.User;
 
 public interface UserService {
     void saveUser(RegistrationDto registrationDto);
 
-    UserEntity findByEmail(String email);
+    User findByEmail(String email);
 
-    UserEntity findByUsername(String username);
+    User findByUsername(String username);
 }
