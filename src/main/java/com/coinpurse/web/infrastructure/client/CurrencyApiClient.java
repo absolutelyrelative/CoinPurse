@@ -27,7 +27,7 @@ public class CurrencyApiClient {
 
     public CurrencyApiClient(
             @Value("${currency.service.base-url}") String baseUrl,
-            @Value("${currency.service.api-version:v1}") String apiVersion,
+            @Value("${currency.service.api-version}") String apiVersion,
             @Value("${currency.service.endpoints.all-currencies}") String endpointAllCurrencies,
             @Value("${currency.service.endpoints.currency}") String currency) {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
@@ -47,7 +47,7 @@ public class CurrencyApiClient {
 
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("@latest/{apiVersion}/{endpoint}")
+                        .path("@latest/{apiVersion}/{endpoint}.json")
                         //.queryParam("date", formattedDate)
                         .build(apiVersion, endpointAllCurrencies))
                 .accept(MediaType.APPLICATION_JSON)
@@ -69,6 +69,7 @@ public class CurrencyApiClient {
      * @return a promise to a DTO containing Exchange Ratio DTO
      */
     public Mono<ExchangeRatioDTO> refreshCurrencyExchangeRates() {
+
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -80,13 +81,12 @@ public class CurrencyApiClient {
                 .bodyToMono(ExchangeRatioDTO.class)
                 .log()
                 .onErrorResume(WebClientResponseException.class, ex -> {
-                    log.error("HTTP Error fetching currencies for date {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+                    log.error("HTTP Error fetching currencies values for date {}: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
                     return Mono.just(new ExchangeRatioDTO());
                 })
                 .onErrorResume(ex -> {
-                    log.error("Unexpected error fetching currencies for date: {}", ex.getMessage(), ex);
+                    log.error("Unexpected error fetching currencies values for date: {}", ex.getMessage(), ex);
                     return Mono.just(new ExchangeRatioDTO());
-                })
-                .log("Completed!");
+                });
     }
 }

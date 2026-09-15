@@ -20,7 +20,6 @@ import java.util.*;
 @Service
 public class CurrencyServicesImpl implements CurrencyServices {
 
-    private static final Logger log = LoggerFactory.getLogger(CurrencyServicesImpl.class);
     private final CurrencyApiClient currencyApiClient;
     private final CurrencyRepository currencyRepository;
 
@@ -73,7 +72,7 @@ public class CurrencyServicesImpl implements CurrencyServices {
     public Mono<List<Currency>> refreshExchangeRates(List<Currency> currencies) {
         Mono<ExchangeRatioDTO> exchangeRatioResponse = currencyApiClient.refreshCurrencyExchangeRates();
 
-        exchangeRatioResponse.map(
+        return exchangeRatioResponse.map(
                 dto -> {
                     // with the fetched Mono, update currencies
                     currencies.forEach( currency -> {
@@ -84,11 +83,10 @@ public class CurrencyServicesImpl implements CurrencyServices {
                         currency.setUpdatedon(LocalDateTime.now());
                     });
 
-                    return currencies;
+                    return currencies; // Mono returns List<Currencies>
                 }
         );
 
-        return Mono.empty();
     }
 
     // return all currencies

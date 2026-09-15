@@ -15,10 +15,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/purses")
 public class PurseController {
-    @Autowired
     private PurseServices purseServices;
-    @Autowired
-    private UserService userService;
+
+    public PurseController(PurseServices purseServices) {
+        this.purseServices = purseServices;
+    }
 
     @PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
     public ResponseEntity<PurseDto> createPurse(@RequestBody PurseDto purseDto) {
@@ -42,7 +43,7 @@ public class PurseController {
     }
 
     @PostMapping(value = "/{purseId}/edit", produces = "application/json")
-    public ResponseEntity<String> updatePurse(@RequestBody PurseDto purse){
+    public ResponseEntity<String> updatePurse(@RequestBody PurseDto purse, @PathVariable Long purseId){
         purseServices.updatePurse(PurseMapper.mapToPurse(purse));
         return ResponseEntity.ok().build();
     }
