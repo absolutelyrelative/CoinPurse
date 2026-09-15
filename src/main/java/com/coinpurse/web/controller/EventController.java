@@ -17,10 +17,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/events")
 public class EventController {
-    @Autowired
     private EventServices eventServices;
-    @Autowired
-    private UserService userService;
+
+    public EventController(EventServices eventServices) {
+        this.eventServices = eventServices;
+    }
 
     @PostMapping(value = "/new", produces = "application/json")
     public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) {
@@ -46,7 +47,7 @@ public class EventController {
     }
 
     @PostMapping(value = "/{purseId}/edit", produces = "application/json")
-    public ResponseEntity<String> updateEvent(@RequestBody EventDto event){
+    public ResponseEntity<String> updateEvent(@RequestBody EventDto event, @PathVariable Long purseId){
         eventServices.updatePurse(EventMapper.mapToEvent(event));
         return ResponseEntity.ok().build();
     }

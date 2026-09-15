@@ -1,7 +1,7 @@
 package com.coinpurse.web.dto.purse;
 
 import com.coinpurse.web.dto.event.EventDto;
-import com.coinpurse.web.model.UserEntity;
+import com.coinpurse.web.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +20,6 @@ public class PurseDto {
     private String description;
     private LocalDateTime creation;
     private String currency;
-    private UserEntity createdBy;
+    private User createdBy;
     private List<EventDto> events;
 }

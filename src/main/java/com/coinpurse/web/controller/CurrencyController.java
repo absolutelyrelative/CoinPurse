@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/currencies")
@@ -26,8 +28,8 @@ public class CurrencyController {
     }
 
     @PostMapping(value = "/refresh")
-    public void refreshCurrencies() {
-        currencyServices.refreshCurrencies(LocalDate.now());
+    public Mono<Map<String, String>> refreshCurrencies() {
+        return currencyServices.refreshCurrencies(LocalDate.now());
     }
 
     @GetMapping(value = "/list", produces = "application/json")
