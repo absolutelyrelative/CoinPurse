@@ -1,5 +1,6 @@
 package com.coinpurse.web.controller;
 
+import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
 import com.coinpurse.web.dto.event.EventDto;
 import com.coinpurse.web.dto.purse.PurseDto;
 import com.coinpurse.web.mapper.EventMapper;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
 
 @RestController
 @RequestMapping(value = "/api/events")
@@ -42,7 +45,9 @@ public class EventController {
 
     @GetMapping(value = "/{eventId}", produces = "application/json")
     public ResponseEntity<EventDto> viewEvent(@PathVariable("eventId") Long eventId) {
-        EventDto dto = EventMapper.mapToEventDto(eventServices.findByEventId(eventId));
+        Event event = eventServices.findByEventId(eventId);
+        if(event == null) { throw new ResourceNotFoundException(EVENT_NOT_FOUND); }
+        EventDto dto = EventMapper.mapToEventDto(event);
         return ResponseEntity.ok(dto);
     }
 
