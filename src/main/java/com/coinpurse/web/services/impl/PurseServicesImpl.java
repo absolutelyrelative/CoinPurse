@@ -52,7 +52,6 @@ public class PurseServicesImpl implements PurseServices {
     @Override
     public List<Purse> searchPurse(String query) {
         return purseRepository.searchPurse(query);
-        return purses;
     }
 
 }
