@@ -1,5 +1,7 @@
 package com.coinpurse.web.services.impl;
 
+import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
+import com.coinpurse.web.exceptions.GlobalExceptionHandler;
 import com.coinpurse.web.model.Event;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.repository.EventRepository;
@@ -14,6 +16,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
+
 @Service
 public class EventServicesImpl implements EventServices {
     private EventRepository eventRepository;
@@ -23,6 +27,7 @@ public class EventServicesImpl implements EventServices {
         this.eventRepository = eventRepository;
     }
 
+    // TODO: Should return 201 if created
     @Override
     public Event createEvent(Purse purse, Event event) {
         event.setPurse(purse);
@@ -42,21 +47,22 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public List<Event> findAllEvents() {
-        List<Event> events = eventRepository.findAll();
-        return events;
+        return eventRepository.findAll();
     }
 
     @Override
     public Event findByEventId(Long eventId) {
-        Event event = eventRepository.findById(eventId).get();
-        return event;
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException(EVENT_NOT_FOUND));
     }
 
+    // TODO: Should return 404 if not found
     @Override
     public void updatePurse(Event event) {
         eventRepository.save(event);
     }
 
+    // TODO: Should return 404 if not found, 204 if found
     @Override
     public void deleteEvent(Event event) {
         eventRepository.deleteById(event.getId());
@@ -67,9 +73,9 @@ public class EventServicesImpl implements EventServices {
         List<Event> allEvents =  eventRepository.findAllByCurrency(currency, null);
 
         // Truncate to Days
-        allEvents.forEach(event -> {
-            event.setDate(event.getDate().truncatedTo(ChronoUnit.DAYS));
-        });
+        allEvents.forEach(event ->
+            event.setDate(event.getDate().truncatedTo(ChronoUnit.DAYS))
+        );
 
         return allEvents;
     }

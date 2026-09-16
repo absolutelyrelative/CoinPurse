@@ -9,5 +9,5 @@ public interface RoleServices {
 
     public Role saveRole(Role role);
 
-    public void deleteRole(Role role) throws Exception;
+    public void deleteRole(Role role);
 }

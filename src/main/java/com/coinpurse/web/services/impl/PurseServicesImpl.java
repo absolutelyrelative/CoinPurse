@@ -1,5 +1,6 @@
 package com.coinpurse.web.services.impl;
 
+import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.repository.PurseRepository;
 import com.coinpurse.web.repository.UserRepository;
@@ -9,27 +10,27 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
+import static com.coinpurse.web.constants.ErrorMessages.PURSE_NOT_FOUND;
+
 @Service
 public class PurseServicesImpl implements PurseServices {
-    private UserRepository userRepository;
     private PurseRepository purseRepository;
 
     @Autowired
     public PurseServicesImpl(PurseRepository purseRepository, UserRepository userRepository) {
         this.purseRepository = purseRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
     public List<Purse> findAllPurses() {
-        List<Purse> purses = purseRepository.findAll();
-        return purses;
+        return purseRepository.findAll();
     }
 
     @Override
     public Purse findPurseById(long purseId){
-        Purse purse = purseRepository.findById(purseId).get();
-        return purse;
+        return purseRepository.findById(purseId)
+                .orElseThrow(() -> new ResourceNotFoundException(PURSE_NOT_FOUND));
     }
 
     //Should this be a PurseDto?
@@ -50,8 +51,7 @@ public class PurseServicesImpl implements PurseServices {
 
     @Override
     public List<Purse> searchPurse(String query) {
-        List<Purse> purses = purseRepository.searchPurse(query);
-        return purses;
+        return purseRepository.searchPurse(query);
     }
 
 }

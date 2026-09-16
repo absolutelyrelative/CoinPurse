@@ -1,5 +1,6 @@
 package com.coinpurse.web.controller;
 
+import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
 import com.coinpurse.web.dto.purse.PurseDto;
 import com.coinpurse.web.dto.purse.PurseListDto;
 import com.coinpurse.web.mapper.PurseMapper;
@@ -12,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.coinpurse.web.constants.ErrorMessages.PURSE_NOT_FOUND;
+
 @RestController
 @RequestMapping(value = "/api/purses")
 public class PurseController {
-    private PurseServices purseServices;
+    private final PurseServices purseServices;
 
     public PurseController(PurseServices purseServices) {
         this.purseServices = purseServices;
@@ -38,7 +41,9 @@ public class PurseController {
 
     @GetMapping(value = "/{purseId}", produces = "application/json")
     public ResponseEntity<PurseDto> viewPurse(@PathVariable("purseId") Long purseId) {
-        PurseDto dto = PurseMapper.mapToPurseDto(purseServices.findPurseById(purseId));
+        Purse purse = purseServices.findPurseById(purseId);
+        if(purse == null) throw new ResourceNotFoundException(PURSE_NOT_FOUND);
+        PurseDto dto = PurseMapper.mapToPurseDto(purse);
         return ResponseEntity.ok(dto);
     }
 

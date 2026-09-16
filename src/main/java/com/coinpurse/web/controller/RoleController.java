@@ -40,11 +40,7 @@ public class RoleController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE, consumes = "application/json")
     public ResponseEntity<Void> deleteRole(RoleDto roleDto) {
-        try {
-            roleServices.deleteRole(RoleMapper.mapToRole(roleDto));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        roleServices.deleteRole(RoleMapper.mapToRole(roleDto));
         return ResponseEntity.ok().build();
     }
 }

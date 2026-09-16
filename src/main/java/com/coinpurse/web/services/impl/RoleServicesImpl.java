@@ -28,12 +28,7 @@ public class RoleServicesImpl implements RoleServices {
     }
 
     @Transactional
-    public void deleteRole(Role role) throws Exception {
-        if(role.getId() != null) {
-            roleRepository.deleteById(role.getId());
-        } else {
-            log.error("Role id to delete not specified");
-            throw new Exception("Role id to delete not specified");
-        }
+    public void deleteRole(Role role) {
+        roleRepository.deleteById(role.getId());
     }
 }
