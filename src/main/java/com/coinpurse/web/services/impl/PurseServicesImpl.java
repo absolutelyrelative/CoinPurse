@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
 import static com.coinpurse.web.constants.ErrorMessages.PURSE_NOT_FOUND;
 
 @Service
@@ -40,12 +39,18 @@ public class PurseServicesImpl implements PurseServices {
     }
 
     @Override
-    public void updatePurse(Purse purse){
-        purseRepository.save(purse);
+    public Purse updatePurse(Purse purse) {
+        if(purse.getId() == null || purseRepository.existsById(purse.getId())) {
+            throw new ResourceNotFoundException(PURSE_NOT_FOUND);
+        }
+        return purseRepository.save(purse);
     }
 
     @Override
     public void delete(long purseId) {
+        if(purseRepository.existsById(purseId)) {
+            throw new ResourceNotFoundException(PURSE_NOT_FOUND);
+        }
         purseRepository.deleteById(purseId);
     }
 
