@@ -12,7 +12,7 @@ public interface EventServices {
 
     Event findByEventId(Long eventId);
 
-    void updatePurse(Event event);
+    Event updateEvent(Event event);
 
     void deleteEvent(Event event);
 

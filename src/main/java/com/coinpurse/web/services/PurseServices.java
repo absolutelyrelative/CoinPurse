@@ -10,7 +10,7 @@ public interface PurseServices {
 
     Purse findPurseById(long purseId);
 
-    void updatePurse(Purse purse);
+    Purse updatePurse(Purse purse);
 
     void delete(long purseId);
     List<Purse> searchPurse(String query);

@@ -4,12 +4,9 @@ import com.coinpurse.web.dto.currency.CurrencyDto;
 import com.coinpurse.web.mapper.CurrencyMapper;
 import com.coinpurse.web.services.CurrencyServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -27,7 +24,8 @@ public class CurrencyController {
         this.currencyServices = currencyServices;
     }
 
-    @PostMapping(value = "/refresh")
+    @PostMapping(value = "/refresh", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<Map<String, String>> refreshCurrencies() {
         return currencyServices.refreshCurrencies(LocalDate.now());
     }

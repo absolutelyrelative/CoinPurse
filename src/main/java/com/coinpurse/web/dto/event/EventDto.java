@@ -26,4 +26,8 @@ public class EventDto {
     private Float finalvalue;
     private Purse purse;
     private Currency currency;
+
+    public EventDto(Long id) {
+        this.id = id;
+    }
 }

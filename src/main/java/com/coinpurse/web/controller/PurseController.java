@@ -6,8 +6,7 @@ import com.coinpurse.web.dto.purse.PurseListDto;
 import com.coinpurse.web.mapper.PurseMapper;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.services.PurseServices;
-import com.coinpurse.web.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +23,17 @@ public class PurseController {
         this.purseServices = purseServices;
     }
 
+    // Return CREATED on creation, server error on generic exception
     @PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<PurseDto> createPurse(@RequestBody PurseDto purseDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public PurseDto createPurse(@RequestBody PurseDto purseDto) {
         Purse purse = PurseMapper.mapToPurse(purseDto);
 
         Purse response = purseServices.savePurse(purse);
-        return ResponseEntity.ok(PurseMapper.mapToPurseDto(response));
+        return PurseMapper.mapToPurseDto(response);
     }
 
+    // Returns ok with list, or empty list
     @GetMapping(value = "/list", produces = "application/json")
     public ResponseEntity<List<PurseListDto>> purseList() {
         List<PurseListDto> purses = purseServices.findAllPurses().stream().map(PurseMapper::mapToPurseListDto)
@@ -39,24 +41,28 @@ public class PurseController {
         return ResponseEntity.ok(purses);
     }
 
+    // Returns ok with dto, or resource not found (ResourceNotFoundException)
     @GetMapping(value = "/{purseId}", produces = "application/json")
-    public ResponseEntity<PurseDto> viewPurse(@PathVariable("purseId") Long purseId) {
-        Purse purse = purseServices.findPurseById(purseId);
-        if(purse == null) throw new ResourceNotFoundException(PURSE_NOT_FOUND);
-        PurseDto dto = PurseMapper.mapToPurseDto(purse);
-        return ResponseEntity.ok(dto);
+    @ResponseStatus(HttpStatus.OK)
+    public PurseDto viewPurse(@PathVariable("purseId") Long purseId) {
+        return PurseMapper.mapToPurseDto(purseServices.findPurseById(purseId));
     }
 
-    @PostMapping(value = "/{purseId}/edit", produces = "application/json")
-    public ResponseEntity<String> updatePurse(@RequestBody PurseDto purse, @PathVariable Long purseId){
-        purseServices.updatePurse(PurseMapper.mapToPurse(purse));
-        return ResponseEntity.ok().build();
+
+    // Returns ok with dto, otherwise not found (ResourceNotFoundException)
+    @PutMapping(value = "/{purseId}/edit", produces = "application/json")
+    public ResponseEntity<PurseDto> updatePurse(@RequestBody PurseDto purse, @PathVariable Long purseId){
+        return ResponseEntity.ok(
+                    PurseMapper.mapToPurseDto(
+                            purseServices.updatePurse(PurseMapper.mapToPurse(purse))
+                    ));
     }
 
-    @GetMapping(value = "/{purseId}/delete", produces = "application/json")
-    public ResponseEntity<String> deletePurse(@PathVariable("purseId") Long purseId) {
+    // Return NO_CONTENT 204 if deleted, NOT FOUND if not found (exception)
+    @DeleteMapping(value = "/{purseId}/delete", produces = "application/json")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePurse(@PathVariable("purseId") Long purseId) {
         purseServices.delete(purseId);
-        return ResponseEntity.ok().build();
     }
 
 }

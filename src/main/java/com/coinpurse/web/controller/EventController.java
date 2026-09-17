@@ -8,8 +8,8 @@ import com.coinpurse.web.mapper.PurseMapper;
 import com.coinpurse.web.model.Event;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.services.EventServices;
-import com.coinpurse.web.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,20 +20,22 @@ import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
 @RestController
 @RequestMapping(value = "/api/events")
 public class EventController {
-    private EventServices eventServices;
+    private final EventServices eventServices;
 
+    @Autowired
     public EventController(EventServices eventServices) {
         this.eventServices = eventServices;
     }
 
-    @PostMapping(value = "/new", produces = "application/json")
-    public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) {
+    @PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventDto createEvent(@RequestBody EventDto eventDto) {
         PurseDto purseDto = PurseDto.builder().id(eventDto.getPurse().getId()).build();
         Purse purse = PurseMapper.mapToPurse(purseDto);
         Event event = EventMapper.mapToEvent(eventDto);
 
         Event response = eventServices.createEvent(purse, event);
-        return ResponseEntity.ok(EventMapper.mapToEventDto(response));
+        return EventMapper.mapToEventDto(response);
     }
 
     @GetMapping(value = "/list", produces = "application/json")
@@ -46,21 +48,21 @@ public class EventController {
     @GetMapping(value = "/{eventId}", produces = "application/json")
     public ResponseEntity<EventDto> viewEvent(@PathVariable("eventId") Long eventId) {
         Event event = eventServices.findByEventId(eventId);
-        if(event == null) { throw new ResourceNotFoundException(EVENT_NOT_FOUND); }
         EventDto dto = EventMapper.mapToEventDto(event);
         return ResponseEntity.ok(dto);
     }
 
-    @PostMapping(value = "/{purseId}/edit", produces = "application/json")
-    public ResponseEntity<String> updateEvent(@RequestBody EventDto event, @PathVariable Long purseId){
-        eventServices.updatePurse(EventMapper.mapToEvent(event));
-        return ResponseEntity.ok().build();
+    @PutMapping(value = "/{purseId}/edit", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<Event> updateEvent(@RequestBody EventDto event, @PathVariable Long purseId){
+        Event savedEvent = eventServices.updateEvent(EventMapper.mapToEvent(event));
+        return ResponseEntity.ok(savedEvent);
     }
 
-    @GetMapping(value = "/{eventId}/delete", produces = "application/json")
-    public ResponseEntity<String> deleteEvent(@PathVariable("eventId") Long eventId) {
-        eventServices.deleteEvent(eventServices.findByEventId(eventId));
-        return ResponseEntity.ok().build();
+    // Return NO_CONTENT if deleted, NOT FOUND if not found
+    @DeleteMapping(value = "/{eventId}/delete")
+    public ResponseEntity<Void> deleteEvent(@PathVariable("eventId") Long eventId) {
+        eventServices.deleteEvent(EventMapper.mapToEvent(new EventDto(eventId)));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/summary", produces = "application/json")
