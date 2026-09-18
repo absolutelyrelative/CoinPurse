@@ -30,7 +30,7 @@ public class CurrencyController {
         return currencyServices.refreshCurrencies(LocalDate.now());
     }
 
-    @GetMapping(value = "/list", produces = "application/json")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<CurrencyDto>> getCurrencies() {
         List<CurrencyDto> currencies = currencyServices.getAllCurrencies().stream().map(
                 currency -> CurrencyMapper.toCurrencyDto(currency)

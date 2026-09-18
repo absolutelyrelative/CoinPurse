@@ -11,8 +11,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/users")
 public class UserController {
 
-    //@PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
-    //public ResponseEntity<UserDto> register(RegistrationDto registrationDto) {
 
-    //}
 }
