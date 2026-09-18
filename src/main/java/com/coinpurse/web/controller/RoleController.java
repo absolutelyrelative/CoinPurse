@@ -20,7 +20,7 @@ public class RoleController {
         this.roleServices = roleServices;
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    @PutMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public RoleDto updateRole(@RequestBody RoleDto roleDto) {
         return RoleMapper.mapToRoleDto(roleServices.saveRole(
@@ -28,7 +28,7 @@ public class RoleController {
         ));
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public RoleDto saveRole(@RequestBody RoleDto roleDto) {
         return RoleMapper.mapToRoleDto(roleServices.saveRole(
@@ -41,7 +41,7 @@ public class RoleController {
         return RoleMapper.mapToRoleDto(roleServices.getRoleById(roleId));
     }
 
-    @RequestMapping(produces = "application/json")
+    @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<RoleDto> getAllRoles() {
         return roleServices.getAll().stream()
@@ -49,7 +49,7 @@ public class RoleController {
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE, consumes = "application/json")
+    @DeleteMapping(value = "/{roleId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRole(@PathVariable Long roleId) {
         roleServices.deleteRole(roleServices.getRoleById(roleId));
