@@ -3,15 +3,12 @@ package com.coinpurse.web.controller;
 import com.coinpurse.web.dto.role.RoleDto;
 import com.coinpurse.web.mapper.RoleMapper;
 import com.coinpurse.web.services.RoleServices;
-import com.coinpurse.web.services.impl.RoleServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/roles")
@@ -23,24 +20,38 @@ public class RoleController {
         this.roleServices = roleServices;
     }
 
-    @RequestMapping(value = "/put", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RoleDto> updateRole(RoleDto roleDto) {
-        return ResponseEntity.ok().build();
+    @RequestMapping(method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public RoleDto updateRole(@RequestBody RoleDto roleDto) {
+        return RoleMapper.mapToRoleDto(roleServices.saveRole(
+                RoleMapper.mapToRole(roleDto)
+        ));
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RoleDto> saveRole(RoleDto roleDto) {
-        return ResponseEntity.ok().build();
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RoleDto saveRole(@RequestBody RoleDto roleDto) {
+        return RoleMapper.mapToRoleDto(roleServices.saveRole(
+                RoleMapper.mapToRole(roleDto)
+        ));
     }
 
-    @RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<RoleDto>> getAllRoles() {
-        return ResponseEntity.ok().build();
+    @GetMapping(value = "/{roleId}", produces = "application/json")
+    public RoleDto getRole(@PathVariable Long roleId) {
+        return RoleMapper.mapToRoleDto(roleServices.getRoleById(roleId));
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, consumes = "application/json")
-    public ResponseEntity<Void> deleteRole(RoleDto roleDto) {
-        roleServices.deleteRole(RoleMapper.mapToRole(roleDto));
-        return ResponseEntity.ok().build();
+    @RequestMapping(produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<RoleDto> getAllRoles() {
+        return roleServices.getAll().stream()
+                .map(RoleMapper::mapToRoleDto)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE, consumes = "application/json")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRole(@PathVariable Long roleId) {
+        roleServices.deleteRole(roleServices.getRoleById(roleId));
     }
 }

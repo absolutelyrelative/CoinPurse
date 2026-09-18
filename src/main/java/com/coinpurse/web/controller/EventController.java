@@ -27,7 +27,7 @@ public class EventController {
         this.eventServices = eventServices;
     }
 
-    @PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
+    @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(@RequestBody EventDto eventDto) {
         PurseDto purseDto = PurseDto.builder().id(eventDto.getPurse().getId()).build();
@@ -38,7 +38,7 @@ public class EventController {
         return EventMapper.mapToEventDto(response);
     }
 
-    @GetMapping(value = "/list", produces = "application/json")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<EventDto>> eventList() {
        List<EventDto> events = eventServices.findAllEvents().stream().map(EventMapper::mapToEventListDto)
                .toList();
@@ -46,7 +46,7 @@ public class EventController {
     }
 
     @GetMapping(value = "/{eventId}", produces = "application/json")
-    public ResponseEntity<EventDto> viewEvent(@PathVariable("eventId") Long eventId) {
+    public ResponseEntity<EventDto> getEvent(@PathVariable("eventId") Long eventId) {
         Event event = eventServices.findByEventId(eventId);
         EventDto dto = EventMapper.mapToEventDto(event);
         return ResponseEntity.ok(dto);
@@ -59,7 +59,7 @@ public class EventController {
     }
 
     // Return NO_CONTENT if deleted, NOT FOUND if not found
-    @DeleteMapping(value = "/{eventId}/delete")
+    @DeleteMapping(value = "/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable("eventId") Long eventId) {
         eventServices.deleteEvent(EventMapper.mapToEvent(new EventDto(eventId)));
         return ResponseEntity.noContent().build();

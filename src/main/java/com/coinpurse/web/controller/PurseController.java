@@ -24,7 +24,7 @@ public class PurseController {
     }
 
     // Return CREATED on creation, server error on generic exception
-    @PostMapping(value = "/new", produces = "application/json", consumes = "application/json")
+    @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public PurseDto createPurse(@RequestBody PurseDto purseDto) {
         Purse purse = PurseMapper.mapToPurse(purseDto);
@@ -34,7 +34,7 @@ public class PurseController {
     }
 
     // Returns ok with list, or empty list
-    @GetMapping(value = "/list", produces = "application/json")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<PurseListDto>> purseList() {
         List<PurseListDto> purses = purseServices.findAllPurses().stream().map(PurseMapper::mapToPurseListDto)
                 .toList();
@@ -50,7 +50,7 @@ public class PurseController {
 
 
     // Returns ok with dto, otherwise not found (ResourceNotFoundException)
-    @PutMapping(value = "/{purseId}/edit", produces = "application/json")
+    @PutMapping(value = "/{purseId}", produces = "application/json")
     public ResponseEntity<PurseDto> updatePurse(@RequestBody PurseDto purse, @PathVariable Long purseId){
         return ResponseEntity.ok(
                     PurseMapper.mapToPurseDto(
@@ -59,7 +59,7 @@ public class PurseController {
     }
 
     // Return NO_CONTENT 204 if deleted, NOT FOUND if not found (exception)
-    @DeleteMapping(value = "/{purseId}/delete", produces = "application/json")
+    @DeleteMapping(value = "/{purseId}", produces = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePurse(@PathVariable("purseId") Long purseId) {
         purseServices.delete(purseId);
