@@ -36,7 +36,7 @@ public class EventController {
     @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(@RequestBody @Validated(OnCreate.class) EventDto eventDto) {
-        PurseDto purseDto = PurseDto.builder().id(eventDto.getPurse().getId()).build();
+        PurseDto purseDto = PurseDto.builder().id(eventDto.getPurseId()).build();
         Purse purse = PurseMapper.mapToPurse(purseDto);
         Event event = EventMapper.mapToEvent(eventDto);
 

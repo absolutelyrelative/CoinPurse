@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { EVENTS_LIST_BY_PURSE } from "../../../constants/constants";
+import {EVENTS, EVENTS_LIST_BY_PURSE} from "../../../constants/constants";
 import Table from 'react-bootstrap/Table';
 import { useParams } from 'react-router-dom';
 import { Container } from "react-bootstrap";
@@ -8,35 +8,9 @@ import EventsGraph from "./eventsgraph";
 import Button from "react-bootstrap/Button";
 import AddEvent from "./addevent.jsx";
 
-// Fetch data function
-const getData = async(url, setError, setLoading, setDataFromChild, setData) => {
-  // Make GET request to fetch data
-    axios
-    .get(url)
-    .then((response) => {
-        console.log("refreshed");
-        setData(response.data);
-        setLoading(false);
-        setDataFromChild(false);
-    })
-    .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-    });
-};
-
 function EventsList() {
     let params = useParams();
-    var url = EVENTS_LIST_BY_PURSE + params.id;
-
-    // Refresh table on trigger
-    const [dataFromChild, setDataFromChild] = useState(false);
-
-    async function handleDataFromChild(data) {
-      setDataFromChild(data);
-      await getData(url, setError, setLoading, setDataFromChild, setData);
-      setDataFromChild(false);
-    }
+    let url = EVENTS_LIST_BY_PURSE + params.id;
 
     // Data fetch state
     const [data, setData] = useState([]);
@@ -44,9 +18,35 @@ function EventsList() {
     const [error, setError] = useState(null);
 
     // Fetch data
-    useEffect(() => {getData(url, setError, setLoading, setDataFromChild, setData)}, [dataFromChild, loading]);
+    useEffect(() => {
+            axios
+                .get(url)
+                .then((response) => {
+                    const res = response.data;
 
-    
+                    let parsedArray = [];
+                    //if (Array.isArray(res)) {
+                    //    parsedArray = res;
+                    //} else if (res && typeof res === "object") {
+                    //    // Adjust property names (res.events or res.data) if wrapped, otherwise convert object values
+                    //    parsedArray = res.events || res.data || Object.values(res);
+                    //}
+                    //setData(parsedArray);
+                    setData(res);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    setError(err.message);
+                    setLoading(false);
+                })
+                .finally(() =>
+                console.log(data))
+        }, [loading]
+    );
+
+
+    debugger
+
 
     // Handle errors on fetch
     if (loading) return <div>Loading...</div>;
@@ -83,7 +83,7 @@ function EventsList() {
 
       </tbody>
     </Table>
-          <AddEvent purseId={params.id} sendDataToParent={handleDataFromChild}></AddEvent>
+          <AddEvent purseId={params.id} ></AddEvent>
     </Container>
     );
 }
