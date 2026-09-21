@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PurseCard from "../purse-card/pursecard";
 import axios from "axios";
-import { PURSE_SAVE } from "../../../constants/constants";
+import { PURSE } from "../../../constants/constants";
 import Stack from "react-bootstrap/Stack";
 import { Button, Modal } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
@@ -15,7 +15,7 @@ function CreatePurse(props) {
     
     // Post data
     function postData() {
-        axios.post(PURSE_SAVE, {
+        axios.post(PURSE, {
             title: purseTitle,
             description: purseDescription,
             currency: purseCurrency

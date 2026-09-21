@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PurseCard from "../purse-card/pursecard";
 import CreatePurse from "../purse-modals/createpurse";
 import axios from "axios";
-import { PURSE_LIST } from "../../../constants/constants";
+import { PURSE } from "../../../constants/constants";
 import Stack from "react-bootstrap/Stack";
 import { Button, Container } from "react-bootstrap";
 
@@ -22,7 +22,7 @@ function PurseList() {
   useEffect(() => {
     // Make GET request to fetch data
     axios
-      .get(PURSE_LIST)
+      .get(PURSE)
       .then((response) => {
         setData(response.data);
         setLoading(false);

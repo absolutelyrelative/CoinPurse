@@ -35,7 +35,7 @@ public class EventDto {
     @NotNull(message=ID_NULL, groups = {OnCreate.class, OnUpdate.class})
     private Float delta;
     private Float finalvalue;
-    private Purse purse;
+    private Long purseId;
     private Currency currency;
 
     public EventDto(Long id) {

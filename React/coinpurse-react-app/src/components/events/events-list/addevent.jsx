@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { EVENT_SAVE, CURRENCIES_LIST } from "../../../constants/constants";
+import {CURRENCIES, EVENTS } from "../../../constants/constants";
 import { NUMBER_FORMAT_ERROR } from "../../../constants/messages";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -31,7 +31,7 @@ function handleValidation(eventDate, eventComment, eventChange, setEventDate, se
 
 async function fetchCurrencies(setCurrencies){
     try {
-        const response = await fetch(CURRENCIES_LIST);
+        const response = await fetch(CURRENCIES);
 
         if (!response.ok) {
             throw new Error(`HTTP error: ${response.status}`);
@@ -45,7 +45,7 @@ async function fetchCurrencies(setCurrencies){
 };
 
 function AddEvent({ purseId , sendDataToParent}) {
-    var url = EVENT_SAVE;
+    var url = EVENTS;
 
     // Form data
     const [eventDate, setEventDate] = useState('');
@@ -117,7 +117,7 @@ function AddEvent({ purseId , sendDataToParent}) {
             </Form.Group>
             <Form.Select aria-label="Default select example" onChange={e => setSelectedCurrency(e.target.value)}>
                 {currencies.map((currency) => (
-                        <option value={currency.id}>{currency.currency}</option>
+                        <option key={currency.id} value={currency.id}>{currency.currency}</option>
                 ))}
             </Form.Select>
             <Button variant="success" onClick={postData}>Add</Button>

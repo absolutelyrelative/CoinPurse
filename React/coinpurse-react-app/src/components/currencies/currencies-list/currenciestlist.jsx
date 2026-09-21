@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {CURRENCIES_LIST, CURRENCIES_UPDATE} from "../../../constants/constants.jsx";
+import {CURRENCIES_UPDATE, CURRENCIES} from "../../../constants/constants.jsx";
 import { Container } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { SlRefresh } from "react-icons/sl";
@@ -20,7 +20,7 @@ function CurrenciesList() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(CURRENCIES_LIST)
+        fetch(CURRENCIES)
             .then(res => res.json())
             .then(r => {r.sort((a, b) => a.currency.localeCompare(b.currency)); setData(r)})
         .catch(err => setError(err))

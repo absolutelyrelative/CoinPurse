@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
 import static com.coinpurse.web.constants.ErrorMessages.PURSE_NOT_FOUND;
@@ -86,9 +87,13 @@ public class EventServicesImpl implements EventServices {
     @Override
     public List<Event> getEventsByPurse(Purse purse) {
         List<Event> events = eventRepository.getEventsByPurse(purse);
-        events.sort(Comparator.comparing(Event::getDate));
+        return events.stream().filter(event -> event.getDate() != null).toList();
 
-        return events;
+        //return events.stream()
+        //        .sorted(Comparator.comparing(
+        //               Event::getDate, Comparator.nullsFirst(Comparator.naturalOrder())))
+        //        .toList();
+
     }
 
 
