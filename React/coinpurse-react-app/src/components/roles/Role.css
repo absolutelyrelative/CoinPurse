@@ -1,0 +1,6 @@
+.role-input {
+}
+
+.role-input.modified {
+    background-color: rgb(186 155 0 / 0.25);
+}
