@@ -27,6 +27,11 @@ function NavBar() {
                   Currencies
               </Nav.Link>
           </Nav.Item>
+          <Nav.Item>
+              <Nav.Link as={Link} to="/rolelist" eventKey="/rolelist">
+                  Roles
+              </Nav.Link>
+          </Nav.Item>
       </Nav>
       <br></br>
       <Outlet />

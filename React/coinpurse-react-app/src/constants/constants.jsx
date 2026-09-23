@@ -11,3 +11,6 @@ export const EVENTS_LIST_BY_PURSE = EVENTS + '/purse/'
 // Currencies mappings
 export const CURRENCIES = BACKEND_API_URL + "/currencies"
 export const CURRENCIES_UPDATE = BACKEND_API_URL + "/currencies/refresh"
+
+// Role mappings
+export const ROLES = BACKEND_API_URL + "/roles";

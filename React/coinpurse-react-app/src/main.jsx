@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
 import NavBar from "./components/navbar/navbar.jsx";
 import EventsList from "./components/events/events-list/eventslist.jsx";
 import CurrenciesList from "./components/currencies/currencies-list/currenciestlist.jsx";
+import {RoleList} from "./components/roles/rolelist.jsx";
 
 const router = createBrowserRouter([
   { // route 1
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { path: "/purselist", element: <PurseList /> },
       { path: "/purse/:id", element: <EventsList />},
       { path: "/currencieslist", element: <CurrenciesList />},
+      { path: "/rolelist", element: <RoleList />},
       { path: "*", element: <App /> },
     ]
   }
