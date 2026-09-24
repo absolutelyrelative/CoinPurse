@@ -6,9 +6,7 @@ import com.coinpurse.web.validation.OnUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import static com.coinpurse.web.constants.ErrorMessages.ID_NULL;
 import static com.coinpurse.web.constants.ErrorMessages.ROLE_NAME_EMPTY;
@@ -16,6 +14,8 @@ import static com.coinpurse.web.constants.ErrorMessages.ROLE_NAME_EMPTY;
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoleDto {
     @NotNull(message = ID_NULL, groups = OnUpdate.class)
     @Null(groups = OnCreate.class)
