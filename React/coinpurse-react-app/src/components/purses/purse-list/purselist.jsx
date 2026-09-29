@@ -18,6 +18,9 @@ function PurseList() {
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
   // Fetch data
   useEffect(() => {
     // Make GET request to fetch data
@@ -31,7 +34,7 @@ function PurseList() {
         setError(err.message);
         setLoading(false);
       });
-  }, []);
+  }, [refreshTrigger]);
 
   // Handle errors on fetch
   if (loading) return <div>Loading...</div>;
@@ -41,7 +44,7 @@ function PurseList() {
     <Container>
       <h1>Purses</h1>
       <Button variant="primary" onClick={handleShow}>Create purse</Button>
-      <CreatePurse show = {show} handleClose = {handleClose} ></CreatePurse>
+      <CreatePurse show = {show} handleClose = {handleClose} loadingprop={triggerRefresh} ></CreatePurse>
 
       <Stack direction="horizontal" gap={3}>
         {data.map((purse) => (

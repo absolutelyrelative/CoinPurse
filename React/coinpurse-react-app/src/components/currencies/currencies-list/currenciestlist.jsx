@@ -4,13 +4,15 @@ import { Container } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { SlRefresh } from "react-icons/sl";
 import Button from "react-bootstrap/Button";
+import Spinner from 'react-bootstrap/Spinner';
 
-function refreshCurrencies( setLoading ) {
-    fetch(CURRENCIES_UPDATE, {
+async function refreshCurrencies( setLoading ) {
+    setLoading(true);
+    await fetch(CURRENCIES_UPDATE, {
         method: "POST"
     })
         .catch( err => console.log(err))
-        .finally( () => setLoading(true))
+        .finally( () => setLoading(false))
 }
 
 function CurrenciesList() {
@@ -37,11 +39,21 @@ function CurrenciesList() {
                 <th>Conversion ratio to EUR</th>
                 <th>Update date</th>
                 <th>
-                    <Button variant="success" onClick={() => {refreshCurrencies(setLoading)}}><SlRefresh /></Button>
+                    <Button variant="success" onClick={() => {refreshCurrencies(setLoading)}}><SlRefresh />
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            hidden={!loading}
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                    </Button>
                 </th>
             </tr>
             </thead>
-            {loading == true ? null : (<tbody>
+            <tbody>
             {
                 data.map((currency) => (
                     <tr key={currency.id}>
@@ -54,7 +66,7 @@ function CurrenciesList() {
                 ))
             }
 
-            </tbody>) }
+            </tbody>
 
         </Table>
     </Container>);

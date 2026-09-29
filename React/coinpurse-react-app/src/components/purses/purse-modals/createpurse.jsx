@@ -12,9 +12,10 @@ function CreatePurse(props) {
     const [purseTitle, setPurseTitle] = useState('');
     const [purseCurrency, setPurseCurrency] = useState('');
     const [purseDescription, setPurseDescription] = useState('');
+    const triggerRefresh = props.loadingprop;
     
     // Post data
-    function postData() {
+    async function postData() {
         axios.post(PURSE, {
             title: purseTitle,
             description: purseDescription,
@@ -28,6 +29,16 @@ function CreatePurse(props) {
         .catch(function (error) {
             console.log(error);
         });
+    }
+
+    async function handlePostData() {
+        try {
+            await postData();
+        } catch (error) {
+            console.error("Failed to post data:", error);
+        } finally {
+            triggerRefresh();
+        }
     }
     
 
@@ -65,7 +76,7 @@ function CreatePurse(props) {
         <Button variant="secondary" onClick={props.handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={postData}>Save Changes</Button>
+        <Button variant="primary" onClick={() => handlePostData()}>Save Changes</Button>
       </Modal.Footer>
     </Modal>
   );
