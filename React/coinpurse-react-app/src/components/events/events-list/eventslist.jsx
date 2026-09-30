@@ -16,6 +16,8 @@ function EventsList() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshData, setRefreshData] = useState(0);
+    const requestRefresh = () =>(setRefreshData((prev) => prev + 1));
 
     // Fetch data
     useEffect(() => {
@@ -23,15 +25,6 @@ function EventsList() {
                 .get(url)
                 .then((response) => {
                     const res = response.data;
-
-                    let parsedArray = [];
-                    //if (Array.isArray(res)) {
-                    //    parsedArray = res;
-                    //} else if (res && typeof res === "object") {
-                    //    // Adjust property names (res.events or res.data) if wrapped, otherwise convert object values
-                    //    parsedArray = res.events || res.data || Object.values(res);
-                    //}
-                    //setData(parsedArray);
                     setData(res);
                     setLoading(false);
                 })
@@ -41,11 +34,8 @@ function EventsList() {
                 })
                 .finally(() =>
                 console.log(data))
-        }, [loading]
+        }, [loading, refreshData]
     );
-
-
-    debugger
 
 
     // Handle errors on fetch
@@ -83,7 +73,7 @@ function EventsList() {
 
       </tbody>
     </Table>
-          <AddEvent purseId={params.id} ></AddEvent>
+          <AddEvent purseId={params.id} requestRefresh={requestRefresh}></AddEvent>
     </Container>
     );
 }

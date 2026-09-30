@@ -27,7 +27,6 @@ public class EventServicesImpl implements EventServices {
         this.eventRepository = eventRepository;
     }
 
-    // TODO: Should return 201 if created
     @Override
     public Event createEvent(Purse purse, Event event) {
         event.setPurse(purse);

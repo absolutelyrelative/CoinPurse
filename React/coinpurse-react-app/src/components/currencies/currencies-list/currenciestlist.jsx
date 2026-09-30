@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import {CURRENCIES_UPDATE, CURRENCIES} from "../../../constants/constants.jsx";
 import { Container } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { SlRefresh } from "react-icons/sl";
 import Button from "react-bootstrap/Button";
 import Spinner from 'react-bootstrap/Spinner';
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
+import {Box, IconButton} from "@mui/material";
+import {FaSave} from "react-icons/fa";
 
 async function refreshCurrencies( setLoading ) {
     setLoading(true);
@@ -21,6 +24,51 @@ function CurrenciesList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const columns = useMemo( () => [
+            {
+                accessorKey: 'currency',
+                header: 'Currency code',
+                enableEditing: false
+            },
+            {
+                accessorKey: 'currencyDescription',
+                header: 'Currency name',
+                enableEditing: false
+            },
+            {
+                accessorKey: 'conversionRatioToEur',
+                header: 'Conversion ratio to EUR',
+                enableEditing: false
+            },
+            {
+                accessorKey: 'updatedOn',
+                header: 'Last refreshed',
+                enableEditing: false
+            }
+        ], []
+    );
+
+    const table = useMaterialReactTable({
+        columns,
+        data: data,
+        layoutMode: "grid",
+        enableColumnOrdering: true, //enable some features
+        enablePagination: false, //disable a default feature
+        renderTopToolbarCustomActions: ({table}) => (
+            <Button variant="success" onClick={() => {refreshCurrencies(setLoading)}}><SlRefresh />
+                <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    hidden={!loading}
+                />
+                <span className="visually-hidden">Loading...</span>
+            </Button>
+        )
+    });
+
     useEffect(() => {
         fetch(CURRENCIES)
             .then(res => res.json())
@@ -29,47 +77,10 @@ function CurrenciesList() {
             .finally(() => setLoading(false));
     }, [loading]);
 
-    return (<Container>
-        <Table striped>
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>ISO Code</th>
-                <th>Description</th>
-                <th>Conversion ratio to EUR</th>
-                <th>Update date</th>
-                <th>
-                    <Button variant="success" onClick={() => {refreshCurrencies(setLoading)}}><SlRefresh />
-                        <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            hidden={!loading}
-                        />
-                        <span className="visually-hidden">Loading...</span>
-                    </Button>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {
-                data.map((currency) => (
-                    <tr key={currency.id}>
-                        <td>{currency.id}</td>
-                        <td>{currency.currency}</td>
-                        <td>{currency.currencyDescription}</td>
-                        <td>{currency.conversionRatioToEur}</td>
-                        <td>{currency.updatedOn}</td>
-                    </tr>
-                ))
-            }
-
-            </tbody>
-
-        </Table>
-    </Container>);
+    return (
+        <Container>
+            <MaterialReactTable table={table} />
+        </Container>);
 }
 
 export default CurrenciesList;
