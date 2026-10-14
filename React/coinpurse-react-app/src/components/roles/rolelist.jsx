@@ -15,7 +15,8 @@ import {Box, IconButton} from "@mui/material";
 import {FaSave} from "react-icons/fa";
 
 export function RoleList(){
-    const [roles, setRoles] = useState([]);
+    const FAKE_ROLE = { id: null, name: '' };
+    const [roles, setRoles] = useState([FAKE_ROLE]);
     // Track pending row updates: rowId: { name: 'New Name' }
     const [pendingEdits, setPendingEdits] = useState({});
 
@@ -116,7 +117,8 @@ export function RoleList(){
             const response = await fetch(ROLES);
 
             if (response.ok) {
-                setRoles(await response.json());
+                const fetchedRoles = await response.json();
+                setRoles([...fetchedRoles, FAKE_ROLE]);
             }
         } catch(err){
             console.error(err);

@@ -7,15 +7,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import axios from "axios";
 
 function handleDate(inputDate, setDateFunction) {
-    console.log("input:", inputDate);
-
     let isoDate = inputDate;
 
     if(inputDate == null || isNaN(Date.parse(inputDate))) {
         isoDate = new Date(Date.now()).toISOString();
     }
-
-    console.log("setting:", isoDate);
 
     setDateFunction(isoDate);
 }
@@ -44,7 +40,7 @@ async function fetchCurrencies(setCurrencies){
     }
 };
 
-function AddEvent({ purseId , sendDataToParent}) {
+function AddEvent({ purseId, requestRefresh}) {
     var url = EVENTS;
 
     // Form data
@@ -64,30 +60,29 @@ function AddEvent({ purseId , sendDataToParent}) {
     }, []);
 
     // Post data
-    function postData() {
+    async function postData() {
         if(handleValidation(eventDate, eventComment, eventChange, setEventDate, setValidated)) {
-            console.log("Posting with ", eventDate);
-            axios.post(url, {
-                comment: eventComment,
-                date: new Date(eventDate),
-                delta: eventChange,
-                purse: {
-                    id: purseId
-                },
-                currency: {
-                    id: selectedCurrency
-                }
-            }, )
-                .then(function (response) {
-                    if(response.status == 200) {
-                        // Refresh page
-                        setRefreshTableData(true);
-                        sendDataToParent(refreshTableData);
+            try {
+                const result = await axios.post(url, {
+                    comment: eventComment,
+                    date: new Date(eventDate),
+                    delta: eventChange,
+                    purseId: purseId,
+                    currency: {
+                        id: selectedCurrency
                     }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                },);
+
+                if(result.status === 201) {
+                    // Refresh page
+                    requestRefresh();
+                    setRefreshTableData(true);
+                }
+            } catch (error) {
+                console.error("Failed to post data:", error);
+            }
+
+
         }
 
     }

@@ -4,7 +4,8 @@ import CreatePurse from "../purse-modals/createpurse";
 import axios from "axios";
 import { PURSE } from "../../../constants/constants";
 import Stack from "react-bootstrap/Stack";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import Spinner from 'react-bootstrap/Spinner';
 
 function PurseList() {
 
@@ -17,6 +18,9 @@ function PurseList() {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
+
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
   // Fetch data
   useEffect(() => {
@@ -31,7 +35,7 @@ function PurseList() {
         setError(err.message);
         setLoading(false);
       });
-  }, []);
+  }, [refreshTrigger]);
 
   // Handle errors on fetch
   if (loading) return <div>Loading...</div>;
@@ -39,15 +43,28 @@ function PurseList() {
 
   return (
     <Container>
-      <h1>Purses</h1>
-      <Button variant="primary" onClick={handleShow}>Create purse</Button>
-      <CreatePurse show = {show} handleClose = {handleClose} ></CreatePurse>
-
-      <Stack direction="horizontal" gap={3}>
-        {data.map((purse) => (
-          <PurseCard purse={purse} key={purse.id}></PurseCard>
-        ))}
-      </Stack>
+        <Col>
+          <Row xs="auto">
+              <h1>Actions</h1>
+              <Button variant="primary" onClick={handleShow}>Create purse</Button>
+              <CreatePurse show = {show} handleClose = {handleClose} loadingprop={triggerRefresh} ></CreatePurse>
+          </Row>
+            <Row>
+                <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    hidden={!loading}
+                />
+          <Stack direction="horizontal" gap={3}>
+            {data.map((purse) => (
+              <PurseCard purse={purse} key={purse.id}></PurseCard>
+            ))}
+          </Stack>
+        </Row>
+        </Col>
     </Container>
   );
 }

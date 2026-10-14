@@ -5,8 +5,10 @@ import Table from 'react-bootstrap/Table';
 import { useParams } from 'react-router-dom';
 import { Container } from "react-bootstrap";
 import EventsGraph from "./eventsgraph";
-import Button from "react-bootstrap/Button";
 import AddEvent from "./addevent.jsx";
+import Spinner from 'react-bootstrap/Spinner';
+import Notification from "../../utility/notification.jsx";
+import Event from "./event.jsx";
 
 function EventsList() {
     let params = useParams();
@@ -16,6 +18,8 @@ function EventsList() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshData, setRefreshData] = useState(0);
+    const requestRefresh = () =>(setRefreshData((prev) => prev + 1));
 
     // Fetch data
     useEffect(() => {
@@ -23,15 +27,6 @@ function EventsList() {
                 .get(url)
                 .then((response) => {
                     const res = response.data;
-
-                    let parsedArray = [];
-                    //if (Array.isArray(res)) {
-                    //    parsedArray = res;
-                    //} else if (res && typeof res === "object") {
-                    //    // Adjust property names (res.events or res.data) if wrapped, otherwise convert object values
-                    //    parsedArray = res.events || res.data || Object.values(res);
-                    //}
-                    //setData(parsedArray);
                     setData(res);
                     setLoading(false);
                 })
@@ -41,16 +36,13 @@ function EventsList() {
                 })
                 .finally(() =>
                 console.log(data))
-        }, [loading]
+        }, [refreshData]
     );
 
 
-    debugger
-
-
     // Handle errors on fetch
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return <div><Spinner/></div>;
+    if (error) return <div><Notification message={"Error loading event list."}></Notification></div>;
 
     return (
       <Container>
@@ -68,22 +60,12 @@ function EventsList() {
       </thead>
       <tbody>
         {data.map((event) => (
-          <tr key={event.id}>
-            <td>{event.id}</td>
-            <td>{event.date}</td>
-            <td>{event.comment}</td>
-            <td>{event.delta}</td>
-            <td>{event.finalvalue}</td>
-              <td>
-                  <Button variant="warning">Edit</Button>
-                  <Button variant="danger">Delete</Button>
-              </td>
-        </tr>
+            <Event event={event} key={event.id}></Event>
         ))}
 
       </tbody>
     </Table>
-          <AddEvent purseId={params.id} ></AddEvent>
+          <AddEvent purseId={params.id} requestRefresh={requestRefresh}></AddEvent>
     </Container>
     );
 }

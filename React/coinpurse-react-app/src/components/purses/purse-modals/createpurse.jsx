@@ -6,28 +6,38 @@ import Stack from "react-bootstrap/Stack";
 import { Button, Modal } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
+import Spinner from 'react-bootstrap/Spinner';
 
 function CreatePurse(props) {
     // Form data
     const [purseTitle, setPurseTitle] = useState('');
     const [purseCurrency, setPurseCurrency] = useState('');
     const [purseDescription, setPurseDescription] = useState('');
+    const [loading, setLoading] = useState(false);
+    const triggerRefresh = props.loadingprop;
     
     // Post data
-    function postData() {
-        axios.post(PURSE, {
-            title: purseTitle,
-            description: purseDescription,
-            currency: purseCurrency
-        })
-        .then(function (response) {
-            if(response.status == 200) {
+    async function postData() {
+        try {
+            setLoading(true);
+            const response = await axios.post(PURSE, {
+                title: purseTitle,
+                description: purseDescription,
+                currency: purseCurrency
+            });
+
+            if (response.status === 201) {
                 props.handleClose();
+                setPurseTitle('');
+                setPurseCurrency('');
+                setPurseDescription('');
+                setLoading(false);
+                triggerRefresh();
             }
-        })
-        .catch(function (error) {
+        } catch (error) {
             console.log(error);
-        });
+        }
+
     }
     
 
@@ -65,7 +75,16 @@ function CreatePurse(props) {
         <Button variant="secondary" onClick={props.handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={postData}>Save Changes</Button>
+        <Button variant="primary" onClick={() => postData()}>Save Changes
+            <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                hidden={!loading}
+            />
+        </Button>
       </Modal.Footer>
     </Modal>
   );
