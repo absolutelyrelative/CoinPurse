@@ -1,6 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useState} from "react";
+import Notification from "../../utility/notification.jsx";
 
 function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false}) {
     let message = "";

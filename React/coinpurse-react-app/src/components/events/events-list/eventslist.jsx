@@ -60,7 +60,7 @@ function EventsList() {
       </thead>
       <tbody>
         {data.map((event) => (
-            <Event event={event}></Event>
+            <Event event={event} key={event.id}></Event>
         ))}
 
       </tbody>

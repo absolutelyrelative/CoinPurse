@@ -2,7 +2,7 @@ import {useState} from "react";
 import Toast from 'react-bootstrap/Toast';
 
 function Notification({message = "", isError = false}) {
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
     const toggleShow = () => {setShow(show => !show);};
 
     return(
