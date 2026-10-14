@@ -5,8 +5,10 @@ import Table from 'react-bootstrap/Table';
 import { useParams } from 'react-router-dom';
 import { Container } from "react-bootstrap";
 import EventsGraph from "./eventsgraph";
-import Button from "react-bootstrap/Button";
 import AddEvent from "./addevent.jsx";
+import Spinner from 'react-bootstrap/Spinner';
+import Notification from "../../utility/notification.jsx";
+import Event from "./event.jsx";
 
 function EventsList() {
     let params = useParams();
@@ -34,13 +36,13 @@ function EventsList() {
                 })
                 .finally(() =>
                 console.log(data))
-        }, [loading, refreshData]
+        }, [refreshData]
     );
 
 
     // Handle errors on fetch
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return <div><Spinner/></div>;
+    if (error) return <div><Notification message={"Error loading event list."}></Notification></div>;
 
     return (
       <Container>
@@ -58,17 +60,7 @@ function EventsList() {
       </thead>
       <tbody>
         {data.map((event) => (
-          <tr key={event.id}>
-            <td>{event.id}</td>
-            <td>{event.date}</td>
-            <td>{event.comment}</td>
-            <td>{event.delta}</td>
-            <td>{event.finalvalue}</td>
-              <td>
-                  <Button variant="warning">Edit</Button>
-                  <Button variant="danger">Delete</Button>
-              </td>
-        </tr>
+            <Event event={event}></Event>
         ))}
 
       </tbody>
