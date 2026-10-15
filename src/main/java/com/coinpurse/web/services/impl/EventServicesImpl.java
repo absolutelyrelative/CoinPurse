@@ -65,7 +65,7 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public void deleteEvent(Event event) {
-        if(event.getId() == null || eventRepository.existsById(event.getId())) {
+        if(event.getId() == null || !eventRepository.existsById(event.getId())) {
             throw new ResourceNotFoundException(EVENT_NOT_FOUND);
         }
         eventRepository.deleteById(event.getId());

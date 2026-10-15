@@ -2,10 +2,30 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useState} from "react";
 import Notification from "../../utility/notification.jsx";
+import {EVENTS} from "../../../constants/constants.jsx";
 
 function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false}) {
+    const [showDeleteNotification, setShowDeleteNotification] = useState(false);
     let message = "";
+    let body = "";
     let actionButton;
+
+    const handleDelete = async (event) => {
+        try {
+            const result = await fetch(`${EVENTS}\\${event.id}`, {
+                method: "DELETE"
+            });
+
+            if(result.ok){
+                setShowDeleteNotification((prev) => !prev);
+                // TODO: Send notification to parent to remove event
+            } else {
+                // TODO: Create notification
+            }
+        } catch (e) {
+            console.log(e); // TODO: Create notification
+        }
+    }
 
     switch(type){
         case "edit":
@@ -14,7 +34,11 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
             break;
         case "delete":
             message = "Delete event";
-            actionButton = <Button variant="danger">Delete</Button>;
+            body = <p> Are you sure you want to delete this event? <br/>
+                <i> Comment: </i>{event.comment} <br/>
+                <i>Change: </i> {event.delta}
+            </p>;
+            actionButton = <Button variant="danger" onClick={() => handleDelete(event)}>Delete</Button>;
             break;
     }
 
@@ -32,13 +56,12 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>
-                    {event.id}
-                </p>
+                    {body}
             </Modal.Body>
             <Modal.Footer>
                 {showExplicitCloseButton ? <Button onClick={toggleModal}>Close</Button> : ""}
                 {actionButton}
+                <Notification showInitially={showDeleteNotification} message="Event deleted."></Notification>
             </Modal.Footer>
         </Modal>
     );
