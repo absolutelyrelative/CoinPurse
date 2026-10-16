@@ -4,8 +4,8 @@ import {useState} from "react";
 import Notification from "../../utility/notification.jsx";
 import {EVENTS} from "../../../constants/constants.jsx";
 
-function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false}) {
-    const [showDeleteNotification, setShowDeleteNotification] = useState(false);
+function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false, requestRefresh,
+                        handleFireNotification}) {
     let message = "";
     let body = "";
     let actionButton;
@@ -17,13 +17,13 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
             });
 
             if(result.ok){
-                setShowDeleteNotification((prev) => !prev);
-                // TODO: Send notification to parent to remove event
+                requestRefresh();
+                handleFireNotification("Element deleted", false);
             } else {
-                // TODO: Create notification
+                handleFireNotification("Error deleting element",true);
             }
         } catch (e) {
-            console.log(e); // TODO: Create notification
+            handleFireNotification("Error deleting element", true);
         }
     }
 
@@ -61,7 +61,6 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
             <Modal.Footer>
                 {showExplicitCloseButton ? <Button onClick={toggleModal}>Close</Button> : ""}
                 {actionButton}
-                <Notification showInitially={showDeleteNotification} message="Event deleted."></Notification>
             </Modal.Footer>
         </Modal>
     );
