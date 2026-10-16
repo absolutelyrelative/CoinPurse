@@ -17,9 +17,15 @@ function EventsList() {
     // Data fetch state
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
     const [refreshData, setRefreshData] = useState(0);
-    const requestRefresh = () =>(setRefreshData((prev) => prev + 1));
+    const requestRefresh = () => (setRefreshData((prev) => prev + 1));
+    const [notificationMessage, setNotificationMessage] = useState({message: "", isError: false, timestamp: null});
+
+    // Handle notification firing
+    const handleFireNotification = (message, isError) => {
+        setNotificationMessage({message: message, isError: isError, timestamp: Date.now()});
+    }
 
     // Fetch data
     useEffect(() => {
@@ -46,6 +52,9 @@ function EventsList() {
 
     return (
       <Container>
+      {notificationMessage.message !== "" ?
+            <Notification message={notificationMessage.message} showInitially={true}
+                isError={notificationMessage.isError} key={notificationMessage.timestamp}></Notification> : ""}
       <EventsGraph data={data}></EventsGraph>
     <Table striped>
       <thead>
@@ -60,12 +69,12 @@ function EventsList() {
       </thead>
       <tbody>
         {data.map((event) => (
-            <Event event={event} key={event.id}></Event>
+            <Event event={event} key={event.id} requestRefresh={requestRefresh} handleFireNotification={handleFireNotification}></Event>
         ))}
 
       </tbody>
     </Table>
-          <AddEvent purseId={params.id} requestRefresh={requestRefresh}></AddEvent>
+          <AddEvent purseId={params.id} requestRefresh={requestRefresh} handleFireNotification={handleFireNotification}></AddEvent>
     </Container>
     );
 }

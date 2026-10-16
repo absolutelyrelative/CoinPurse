@@ -2,10 +2,30 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useState} from "react";
 import Notification from "../../utility/notification.jsx";
+import {EVENTS} from "../../../constants/constants.jsx";
 
-function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false}) {
+function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false, requestRefresh,
+                        handleFireNotification}) {
     let message = "";
+    let body = "";
     let actionButton;
+
+    const handleDelete = async (event) => {
+        try {
+            const result = await fetch(`${EVENTS}\\${event.id}`, {
+                method: "DELETE"
+            });
+
+            if(result.ok){
+                requestRefresh();
+                handleFireNotification("Element deleted", false);
+            } else {
+                handleFireNotification("Error deleting element",true);
+            }
+        } catch (e) {
+            handleFireNotification("Error deleting element", true);
+        }
+    }
 
     switch(type){
         case "edit":
@@ -14,7 +34,11 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
             break;
         case "delete":
             message = "Delete event";
-            actionButton = <Button variant="danger">Delete</Button>;
+            body = <p> Are you sure you want to delete this event? <br/>
+                <i> Comment: </i>{event.comment} <br/>
+                <i>Change: </i> {event.delta}
+            </p>;
+            actionButton = <Button variant="danger" onClick={() => handleDelete(event)}>Delete</Button>;
             break;
     }
 
@@ -32,9 +56,7 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>
-                    {event.id}
-                </p>
+                    {body}
             </Modal.Body>
             <Modal.Footer>
                 {showExplicitCloseButton ? <Button onClick={toggleModal}>Close</Button> : ""}

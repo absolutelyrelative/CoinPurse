@@ -5,27 +5,27 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import axios from "axios";
+import Notification from "../../utility/notification.jsx";
 
-function handleDate(inputDate, setDateFunction) {
+function getProcessedDate(inputDate){
     let isoDate = inputDate;
 
     if(inputDate == null || isNaN(Date.parse(inputDate))) {
         isoDate = new Date(Date.now()).toISOString();
     }
 
-    setDateFunction(isoDate);
+    return isoDate;
 }
 
-function handleValidation(eventDate, eventComment, eventChange, setEventDate, setValidated) {
+function handleValidation(eventDate, eventComment, eventChange, setValidated) {
     if(eventChange == null || isNaN(parseFloat(eventChange))) {
         setValidated(false);
         return false;
     }
-    handleDate(eventDate, setEventDate);
     return true;
 }
 
-async function fetchCurrencies(setCurrencies){
+async function fetchCurrencies(setCurrencies, setSelectedCurrency){
     try {
         const response = await fetch(CURRENCIES);
 
@@ -35,12 +35,17 @@ async function fetchCurrencies(setCurrencies){
 
         const data = await response.json();
         setCurrencies(data);
+
+        // Set default currency
+        if(data.length > 0){
+            setSelectedCurrency(data[0].id);
+        }
     } catch (error) {
         console.error("Failed to fetch currencies:", error);
     }
 };
 
-function AddEvent({ purseId, requestRefresh}) {
+function AddEvent({ purseId, requestRefresh, handleFireNotification}) {
     var url = EVENTS;
 
     // Form data
@@ -56,16 +61,18 @@ function AddEvent({ purseId, requestRefresh}) {
 
     // Refresh currencies
     useEffect(() => {
-        fetchCurrencies(setCurrencies);
+        fetchCurrencies(setCurrencies, setSelectedCurrency);
     }, []);
 
     // Post data
     async function postData() {
-        if(handleValidation(eventDate, eventComment, eventChange, setEventDate, setValidated)) {
+        const date = getProcessedDate(eventDate);
+
+        if(handleValidation(eventDate, eventComment, eventChange, setValidated)) {
             try {
                 const result = await axios.post(url, {
                     comment: eventComment,
-                    date: new Date(eventDate),
+                    date: date,
                     delta: eventChange,
                     purseId: purseId,
                     currency: {
@@ -77,6 +84,7 @@ function AddEvent({ purseId, requestRefresh}) {
                     // Refresh page
                     requestRefresh();
                     setRefreshTableData(true);
+                    handleFireNotification("Event added.", false);
                 }
             } catch (error) {
                 console.error("Failed to post data:", error);
@@ -93,7 +101,6 @@ function AddEvent({ purseId, requestRefresh}) {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 <Form.Control type="datetime-local" placeholder="Date" name="date"
                               value={eventDate} onChange={e => {
-                    console.log("New value:", e.target.value);
                     setEventDate(e.target.value);
                 }}/>
             </Form.Group>
@@ -107,10 +114,10 @@ function AddEvent({ purseId, requestRefresh}) {
                               value={eventChange} onChange={ e => setEventChange(e.target.value) }
                               />
                 <Form.Control.Feedback type="invalid">
-                    {NUMBER_FORMAT_ERROR}
+                    <Notification message={NUMBER_FORMAT_ERROR} showInitially={true} isError={true}></Notification>
                 </Form.Control.Feedback>
             </Form.Group>
-            <Form.Select aria-label="Default select example" onChange={e => setSelectedCurrency(e.target.value)}>
+            <Form.Select aria-label="Default select example" onChange={(e) => setSelectedCurrency(e.target.value)}>
                 {currencies.map((currency) => (
                         <option key={currency.id} value={currency.id}>{currency.currency}</option>
                 ))}
