@@ -1,10 +1,11 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {useState} from "react";
+import React, {useState} from "react";
 import Notification from "../../utility/notification.jsx";
 import {EVENTS} from "../../../constants/constants.jsx";
+import Table from "react-bootstrap/Table";
 
-function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false, requestRefresh,
+function EventDeleteModal({event, show, toggleModal, type= "edit", showExplicitCloseButton = false, requestRefresh,
                         handleFireNotification}) {
     let message = "";
     let body = "";
@@ -20,7 +21,7 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
                 requestRefresh();
                 handleFireNotification("Element deleted", false);
             } else {
-                handleFireNotification("Error deleting element",true);
+                handleFireNotification("Error deleting element", true);
             }
         } catch (e) {
             handleFireNotification("Error deleting element", true);
@@ -30,6 +31,21 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
     switch(type){
         case "edit":
             message = "Edit event";
+            body = <Table striped>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Comment</th>
+                    <th>Change</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>{event.date}</th>
+                    <th>{event.comment}</th>
+                    <th>{event.delta}</th>
+                </tr>
+                </tbody></Table>;
             actionButton = <Button variant="warning">Edit</Button>;
             break;
         case "delete":
@@ -66,4 +82,4 @@ function EventModal({event, show, toggleModal, type= "edit", showExplicitCloseBu
     );
 }
 
-export default EventModal;
+export default EventDeleteModal;
