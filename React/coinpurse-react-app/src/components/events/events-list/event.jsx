@@ -1,7 +1,8 @@
 import Button from "react-bootstrap/Button";
 import Modal from 'react-bootstrap/Modal';
-import EventModal from "./eventmodal.jsx";
 import {useState} from "react";
+import EventEditModal from "./eventeditmodal.jsx";
+import EventDeleteModal from "./eventdeletemodal.jsx";
 
 function Event({event, requestRefresh, handleFireNotification}){
     const [showEditModal, setShowEditModal] = useState(false);
@@ -19,10 +20,10 @@ function Event({event, requestRefresh, handleFireNotification}){
             <td>
                 <Button variant="warning" onClick={() => setShowEditModal(true)}>Edit</Button>
                 <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
-                <EventModal event={event} show={showEditModal} toggleModal={toggleShowEditModal} type="edit"
-                    requestRefresh={requestRefresh} handleFireNotification={handleFireNotification}></EventModal>
-                <EventModal event={event} show={showDeleteModal} toggleModal={toggleShowDeleteModal} type="delete"
-                            requestRefresh={requestRefresh} handleFireNotification={handleFireNotification}></EventModal>
+                <EventEditModal event={event} show={showEditModal} toggleModal={toggleShowEditModal} type="edit"
+                    requestRefresh={requestRefresh} handleFireNotification={handleFireNotification}></EventEditModal>
+                <EventDeleteModal event={event} show={showDeleteModal} toggleModal={toggleShowDeleteModal} type="delete"
+                            requestRefresh={requestRefresh} handleFireNotification={handleFireNotification}></EventDeleteModal>
             </td>
         </tr>
     );

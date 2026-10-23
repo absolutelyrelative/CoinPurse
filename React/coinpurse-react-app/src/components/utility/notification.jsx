@@ -18,7 +18,7 @@ function Notification({message = "", isError = false, showInitially = false}) {
                 height: '100vh',
                 backgroundColor: 'rgba(0, 0, 0, 0.4)',
                 zIndex: 9998
-                
+
             }}
         >
         <ToastContainer
