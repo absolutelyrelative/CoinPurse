@@ -43,28 +43,30 @@ function PurseList() {
 
   return (
     <Container>
-        <Col>
-          <Row xs="auto">
-              <h1>Actions</h1>
-              <Button variant="primary" onClick={handleShow}>Create purse</Button>
-              <CreatePurse show = {show} handleClose = {handleClose} loadingprop={triggerRefresh} ></CreatePurse>
+          <Row xs="auto" className="mb-4">
+              <Col>
+                <h1>Actions</h1>
+              </Col>
+              <Col>
+                <Button variant="primary" onClick={handleShow}>Create purse</Button>
+                <CreatePurse show = {show} handleClose = {handleClose} loadingprop={triggerRefresh} ></CreatePurse>
+                  <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      hidden={!loading}
+                  />
+              </Col>
           </Row>
-            <Row>
-                <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    hidden={!loading}
-                />
-          <Stack direction="horizontal" gap={3}>
-            {data.map((purse) => (
-              <PurseCard purse={purse} key={purse.id}></PurseCard>
-            ))}
-          </Stack>
+            <Row xs={1} md={3} lg={6}>
+                    {data.map((purse) => (
+                        <Col key={purse.id} >
+                        <PurseCard purse={purse} key={purse.id}></PurseCard>
+                        </Col>
+                    ))}
         </Row>
-        </Col>
     </Container>
   );
 }
