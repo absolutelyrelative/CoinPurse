@@ -25,7 +25,8 @@ public class Event {
     private LocalDateTime createdon;
     @UpdateTimestamp
     private LocalDateTime updatedon;
-    private String type; //TODO: Change to enum?
+    @Enumerated(EnumType.STRING)
+    private EventType type;
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal delta;
     @Column(precision = 19, scale = 2)

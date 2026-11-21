@@ -1,6 +1,7 @@
 package com.coinpurse.web.dto.event;
 
 import com.coinpurse.web.model.Currency;
+import com.coinpurse.web.model.EventType;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.validation.OnCreate;
 import com.coinpurse.web.validation.OnDelete;
@@ -32,7 +33,7 @@ public class EventDto {
     private LocalDateTime date;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
-    private String type; //TODO: Change to enum?
+    private EventType type; // Can be null
     @NotNull(message=ID_NULL, groups = {OnCreate.class, OnUpdate.class})
     private BigDecimal delta;
     private BigDecimal finalvalue;

@@ -24,7 +24,8 @@ public class Purse {
     private String description;
     @CreationTimestamp
     private LocalDateTime creation;
-    private String currency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Currency currency;
 
 //    @ManyToOne
 //    @JoinColumn(name = "created_by", nullable = false)
