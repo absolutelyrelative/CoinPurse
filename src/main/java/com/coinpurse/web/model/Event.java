@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
@@ -27,8 +28,8 @@ public class Event {
     @UpdateTimestamp
     private LocalDateTime updatedon;
     private String type; //TODO: Change to enum?
-    private Float delta;
-    private Float finalValue;
+    private BigDecimal delta;
+    private BigDecimal finalValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="purse_id", nullable=false)

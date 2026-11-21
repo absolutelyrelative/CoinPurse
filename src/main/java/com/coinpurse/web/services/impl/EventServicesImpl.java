@@ -35,7 +35,7 @@ public class EventServicesImpl implements EventServices {
         PageRequest pageRequest = PageRequest.of(0, 1);
         List<Event> lastEvent = eventRepository.findLastEventByPurse(purse, pageRequest);
         if(!lastEvent.isEmpty()) {
-            event.setFinalValue(lastEvent.get(0).getFinalValue() + event.getDelta());
+            event.setFinalValue(lastEvent.get(0).getFinalValue().add(event.getDelta()));
         } else {
             event.setFinalValue(event.getDelta());
         }

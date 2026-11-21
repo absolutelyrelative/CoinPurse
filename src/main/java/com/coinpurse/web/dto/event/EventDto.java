@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.coinpurse.web.constants.ErrorMessages.ID_NULL;
@@ -33,8 +34,8 @@ public class EventDto {
     private LocalDateTime updatedOn;
     private String type; //TODO: Change to enum?
     @NotNull(message=ID_NULL, groups = {OnCreate.class, OnUpdate.class})
-    private Float delta;
-    private Float finalvalue;
+    private BigDecimal delta;
+    private BigDecimal finalvalue;
     private Long purseId;
     private Currency currency;
 
