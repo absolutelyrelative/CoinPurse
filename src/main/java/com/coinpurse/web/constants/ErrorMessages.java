@@ -6,6 +6,7 @@ public final class ErrorMessages {
     public static final String EVENT_NOT_FOUND = "Event not found";
     public static final String PURSE_NOT_FOUND = "Purse not found";
     public static final String ROLE_NOT_FOUND = "Role not found";
+    public static final String ROLE_IN_USE = "Role in use";
 
     // Validation
     public static final String ID_NULL = "Id field cannot be null";

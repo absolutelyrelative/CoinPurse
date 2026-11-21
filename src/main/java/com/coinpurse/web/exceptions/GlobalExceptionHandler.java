@@ -1,6 +1,7 @@
 package com.coinpurse.web.exceptions;
 
 import com.coinpurse.web.constants.ErrorMessages;
+import com.coinpurse.web.domain.exceptions.ResourceInUseException;
 import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
 import com.coinpurse.web.dto.exceptions.ExceptionDto;
 import org.springframework.http.HttpStatus;
@@ -35,4 +36,12 @@ public class GlobalExceptionHandler {
                 ErrorMessages.EXCEPTION_MESSAGE, LocalDateTime.now());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ResourceInUseException.class)
+    public ProblemDetail handleResourceInUseException(ResourceInUseException e){
+        return ProblemDetail.forStatus(HttpStatus.CONFLICT);
+    }
+
+
 }

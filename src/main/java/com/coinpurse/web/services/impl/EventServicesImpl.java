@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +36,8 @@ public class EventServicesImpl implements EventServices {
         PageRequest pageRequest = PageRequest.of(0, 1);
         List<Event> lastEvent = eventRepository.findLastEventByPurse(purse, pageRequest);
         if(!lastEvent.isEmpty()) {
-            event.setFinalValue(lastEvent.get(0).getFinalValue() + event.getDelta());
+            BigDecimal previousValue = lastEvent.getFirst() == null ? BigDecimal.ZERO : lastEvent.getFirst().getFinalValue();
+            event.setFinalValue(previousValue.add(event.getDelta()));
         } else {
             event.setFinalValue(event.getDelta());
         }

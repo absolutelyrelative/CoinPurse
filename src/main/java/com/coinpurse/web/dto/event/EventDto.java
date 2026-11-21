@@ -1,6 +1,8 @@
 package com.coinpurse.web.dto.event;
 
+import com.coinpurse.web.dto.currency.CurrencyDto;
 import com.coinpurse.web.model.Currency;
+import com.coinpurse.web.model.EventType;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.validation.OnCreate;
 import com.coinpurse.web.validation.OnDelete;
@@ -13,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.coinpurse.web.constants.ErrorMessages.ID_NULL;
@@ -31,12 +34,12 @@ public class EventDto {
     private LocalDateTime date;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
-    private String type; //TODO: Change to enum?
+    private EventType type; // Can be null
     @NotNull(message=ID_NULL, groups = {OnCreate.class, OnUpdate.class})
-    private Float delta;
-    private Float finalvalue;
+    private BigDecimal delta;
+    private BigDecimal finalvalue;
     private Long purseId;
-    private Currency currency;
+    private CurrencyDto currency;
 
     public EventDto(Long id) {
         this.id = id;

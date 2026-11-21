@@ -1,5 +1,6 @@
 package com.coinpurse.web.dto.purse;
 
+import com.coinpurse.web.dto.currency.CurrencyDto;
 import com.coinpurse.web.dto.event.EventDto;
 import com.coinpurse.web.model.User;
 import com.coinpurse.web.validation.OnCreate;
@@ -31,7 +32,8 @@ public class PurseDto {
     private String title;
     private String description;
     private LocalDateTime creation;
-    private String currency; // TODO: Delete, there is a currency entity now :)
+    @NotNull(groups = OnCreate.class)
+    private CurrencyDto currency;
     private User createdBy;
     private List<EventDto> events;
 }

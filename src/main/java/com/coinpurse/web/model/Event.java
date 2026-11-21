@@ -1,17 +1,18 @@
 package com.coinpurse.web.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,15 +27,31 @@ public class Event {
     private LocalDateTime createdon;
     @UpdateTimestamp
     private LocalDateTime updatedon;
-    private String type; //TODO: Change to enum?
-    private Float delta;
-    private Float finalValue;
+    @Enumerated(EnumType.STRING)
+    private EventType type;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal delta;
+    @Column(precision = 19, scale = 2)
+    private BigDecimal finalValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="purse_id", nullable=false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Purse purse;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="currency_id", nullable=false)
     private Currency currency;
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Event)) return false;
+        if(((Event) o).getId() != null && ((Event) o).getId().equals(this.getId())) return true;
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
