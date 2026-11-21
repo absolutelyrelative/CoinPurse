@@ -30,7 +30,7 @@ public class Purse {
 //    @ManyToOne
 //    @JoinColumn(name = "created_by", nullable = false)
 //    private UserEntity createdBy;
-    @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "purse", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Event> events = new ArrayList<>();
 

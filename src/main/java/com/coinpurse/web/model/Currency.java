@@ -19,6 +19,7 @@ public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, unique = true)
     private String currency;
     private String currencyDescription;
     private BigDecimal conversionRatioToEur;

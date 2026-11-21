@@ -1,9 +1,11 @@
 package com.coinpurse.web.services.impl;
 
+import com.coinpurse.web.domain.exceptions.ResourceInUseException;
 import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
 import com.coinpurse.web.infrastructure.client.CurrencyApiClient;
 import com.coinpurse.web.model.Role;
 import com.coinpurse.web.repository.RoleRepository;
+import com.coinpurse.web.repository.UserRepository;
 import com.coinpurse.web.services.RoleServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.coinpurse.web.constants.ErrorMessages.ROLE_IN_USE;
 import static com.coinpurse.web.constants.ErrorMessages.ROLE_NOT_FOUND;
 
 @Service
@@ -22,9 +25,12 @@ public class RoleServicesImpl implements RoleServices {
 
     private final RoleRepository roleRepository;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public RoleServicesImpl(RoleRepository roleRepository) {
+    public RoleServicesImpl(RoleRepository roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -36,11 +42,14 @@ public class RoleServicesImpl implements RoleServices {
     @Override
     @Transactional
     public void deleteRole(Role role) {
-        if(roleRepository.existsById(role.getId())) {
-            roleRepository.deleteById(role.getId());
-        } else {
-            throw new ResourceNotFoundException(ROLE_NOT_FOUND);
+        Role roleToDelete = roleRepository.findById(role.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(ROLE_NOT_FOUND));
+
+        if(userRepository.existsByRoles_Id(role.getId())) {
+            throw new ResourceInUseException(ROLE_IN_USE);
         }
+
+        roleRepository.delete(roleToDelete);
     }
 
     @Override
