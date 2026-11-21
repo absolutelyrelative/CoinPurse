@@ -28,7 +28,9 @@ public class Event {
     @UpdateTimestamp
     private LocalDateTime updatedon;
     private String type; //TODO: Change to enum?
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal delta;
+    @Column(precision = 19, scale = 2)
     private BigDecimal finalValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
