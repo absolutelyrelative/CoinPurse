@@ -13,10 +13,14 @@ import java.util.Arrays;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository){
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public void saveUser(RegistrationDto registrationDto) {
