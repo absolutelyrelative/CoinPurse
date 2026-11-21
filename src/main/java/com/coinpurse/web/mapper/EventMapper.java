@@ -2,6 +2,7 @@ package com.coinpurse.web.mapper;
 
 import com.coinpurse.web.dto.event.EventDto;
 import com.coinpurse.web.dto.purse.PurseDto;
+import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.model.Event;
 import com.coinpurse.web.model.Purse;
 
@@ -15,7 +16,7 @@ public class EventMapper {
                 .delta(eventDto.getDelta())
                 .finalValue(eventDto.getFinalvalue())
                 .purse(Purse.builder().id(eventDto.getPurseId()).build())
-                .currency(eventDto.getCurrency())
+                .currency(Currency.builder().id(eventDto.getCurrency().getId()).build())
                 .build();
     }
 
@@ -30,7 +31,7 @@ public class EventMapper {
                 .delta(event.getDelta())
                 .finalvalue(event.getFinalValue())
                 .purseId(event.getPurse().getId())
-                .currency(event.getCurrency())
+                .currency(CurrencyMapper.toCurrencyDto(event.getCurrency()))
                 .build();
     }
 
@@ -44,7 +45,7 @@ public class EventMapper {
                 .type(event.getType())
                 .delta(event.getDelta())
                 .finalvalue(event.getFinalValue())
-                .currency(event.getCurrency())
+                .currency(CurrencyMapper.toCurrencyDto(event.getCurrency()))
                 .build();
     }
 }

@@ -44,7 +44,7 @@ public class PurseMapper {
                 .id(purse.getId())
                 .title(purse.getTitle())
                 .creation(purse.getCreation())
-                .currency(purse.getCurrency())
+                .currency(CurrencyMapper.toCurrencyDto(purse.getCurrency()))
                 .description(purse.getDescription())
                 .build();
         return purseDto;

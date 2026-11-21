@@ -1,5 +1,6 @@
 package com.coinpurse.web.dto.event;
 
+import com.coinpurse.web.dto.currency.CurrencyDto;
 import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.model.EventType;
 import com.coinpurse.web.model.Purse;
@@ -38,7 +39,7 @@ public class EventDto {
     private BigDecimal delta;
     private BigDecimal finalvalue;
     private Long purseId;
-    private Currency currency;
+    private CurrencyDto currency;
 
     public EventDto(Long id) {
         this.id = id;
