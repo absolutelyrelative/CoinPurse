@@ -1,9 +1,6 @@
 package com.coinpurse.web.model;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -12,7 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -32,5 +30,18 @@ public class Purse {
 //    @JoinColumn(name = "created_by", nullable = false)
 //    private UserEntity createdBy;
     @OneToMany(mappedBy = "purse", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Event> events = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Purse)) return false;
+        if(((Purse) o).getId() != null && ((Purse) o).getId().equals(this.getId())) return true;
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

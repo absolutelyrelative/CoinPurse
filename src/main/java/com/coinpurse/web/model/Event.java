@@ -1,10 +1,7 @@
 package com.coinpurse.web.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,7 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -40,4 +38,16 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="currency_id", nullable=false)
     private Currency currency;
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Event)) return false;
+        if(((Event) o).getId() != null && ((Event) o).getId().equals(this.getId())) return true;
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

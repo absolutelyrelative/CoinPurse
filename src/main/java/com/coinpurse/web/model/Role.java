@@ -21,4 +21,16 @@ public class Role {
     private String name;
     @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Role)) return false;
+        if(((Role) o).getId() != null && ((Role) o).getId().equals(this.getId())) return true;
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

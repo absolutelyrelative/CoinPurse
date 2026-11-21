@@ -29,4 +29,15 @@ public class Currency {
     @UpdateTimestamp
     private LocalDateTime updatedon;
 
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Currency)) return false;
+        if(((Currency) o).getId() != null && ((Currency) o).getId().equals(this.getId())) return true;
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
