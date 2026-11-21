@@ -14,7 +14,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Users")
+@Entity
+@Table(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -13,7 +13,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Roles")
+@Entity
+@Table(name = "Roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
