@@ -10,6 +10,7 @@ import com.coinpurse.web.services.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -91,14 +92,7 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public List<Event> getEventsByPurse(Purse purse) {
-        List<Event> events = eventRepository.getEventsByPurse(purse);
-        return events.stream().filter(event -> event.getDate() != null).toList();
-
-        //return events.stream()
-        //        .sorted(Comparator.comparing(
-        //               Event::getDate, Comparator.nullsFirst(Comparator.naturalOrder())))
-        //        .toList();
-
+        return eventRepository.getEventsByPurseAndDateIsNotNullOrderByDateAsc(purse);
     }
 
 
