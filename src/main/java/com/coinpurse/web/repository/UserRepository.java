@@ -4,13 +4,16 @@ import com.coinpurse.web.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, UUID> {
+    Optional<User> findByEmail(String email);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-    User findFirstByUsername(String username);
+    Optional<User> findFirstByUsername(String username);
 
     boolean existsByRoles_Id(Long roleId);
 }
