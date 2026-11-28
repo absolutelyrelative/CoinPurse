@@ -2,6 +2,7 @@ package com.coinpurse.web.services;
 
 import com.coinpurse.web.model.Event;
 import com.coinpurse.web.model.Purse;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

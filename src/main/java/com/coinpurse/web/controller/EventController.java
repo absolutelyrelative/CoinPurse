@@ -73,8 +73,9 @@ public class EventController {
     }
 
     @GetMapping(value = "/summary", produces = "application/json")
-    public ResponseEntity<List<EventDto>> getSummary() {
-        List<EventDto> events = eventServices.getAllEventsByDateAndCurrency("").stream().map(EventMapper::mapToEventDto)
+    public ResponseEntity<List<EventDto>> getSummary(@RequestParam(required = false) String currency) {
+        List<EventDto> events = eventServices.getAllEventsByDateAndCurrency(currency).stream()
+                .map(EventMapper::mapToEventDto)
                 .toList();
         return ResponseEntity.ok(events);
     }

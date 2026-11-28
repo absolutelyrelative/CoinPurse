@@ -1,6 +1,7 @@
 package com.coinpurse.web.services.impl;
 
 import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
+import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.model.Event;
 import com.coinpurse.web.model.Purse;
 import com.coinpurse.web.repository.EventRepository;
@@ -8,6 +9,7 @@ import com.coinpurse.web.repository.PurseRepository;
 import com.coinpurse.web.services.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -75,7 +77,9 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public List<Event> getAllEventsByDateAndCurrency(String currency) {
-        List<Event> allEvents =  eventRepository.findAllByCurrency(currency, null);
+        List<Event> allEvents = currency == null ?
+                eventRepository.findAll() :
+                eventRepository.findAllByCurrency_Currency(currency, Pageable.unpaged());
 
         // Truncate to Days
         allEvents.forEach(event ->
