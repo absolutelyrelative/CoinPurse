@@ -3,6 +3,8 @@ package com.coinpurse.web.exceptions;
 import com.coinpurse.web.constants.ErrorMessages;
 import com.coinpurse.web.domain.exceptions.ResourceInUseException;
 import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
+import com.coinpurse.web.domain.exceptions.ValidationError;
+import com.coinpurse.web.domain.exceptions.ValidationException;
 import com.coinpurse.web.dto.exceptions.ExceptionDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -13,14 +15,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return e.getBody();
+        List<ValidationError> validationErrors = e.getBindingResult().getFieldErrors().stream()
+                .map(error -> new ValidationError(error.getField(), error.getDefaultMessage()))
+                .toList();
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST, "Validation failed"
+        );
+        problem.setProperty("errors", validationErrors);
+
+        return problem;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -41,6 +52,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceInUseException.class)
     public ProblemDetail handleResourceInUseException(ResourceInUseException e){
         return ProblemDetail.forStatus(HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ProblemDetail handleValidationException(ValidationException validationException){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNPROCESSABLE_CONTENT, validationException.getMessage()
+        );
+
+        problem.setProperty("errors", validationException.getValidationErrors());
+        return problem;
     }
 
 

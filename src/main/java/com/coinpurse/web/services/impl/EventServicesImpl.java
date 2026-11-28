@@ -1,31 +1,37 @@
 package com.coinpurse.web.services.impl;
 
 import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
+import com.coinpurse.web.domain.exceptions.ValidationErrors;
+import com.coinpurse.web.model.Currency;
 import com.coinpurse.web.model.Event;
+import com.coinpurse.web.model.EventType;
 import com.coinpurse.web.model.Purse;
+import com.coinpurse.web.repository.CurrencyRepository;
 import com.coinpurse.web.repository.EventRepository;
-import com.coinpurse.web.repository.PurseRepository;
 import com.coinpurse.web.services.EventServices;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.coinpurse.web.constants.ErrorMessages.EVENT_NOT_FOUND;
-import static com.coinpurse.web.constants.ErrorMessages.PURSE_NOT_FOUND;
+import static com.coinpurse.web.constants.ErrorMessages.*;
 
 @Service
 public class EventServicesImpl implements EventServices {
-    private EventRepository eventRepository;
+    private final CurrencyRepository currencyRepository;
+    private final EventRepository eventRepository;
 
     @Autowired
-    public EventServicesImpl(EventRepository eventRepository, PurseRepository purseRepository) {
+    public EventServicesImpl(EventRepository eventRepository,
+                             CurrencyRepository currencyRepository) {
         this.eventRepository = eventRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
@@ -58,11 +64,27 @@ public class EventServicesImpl implements EventServices {
     }
 
     @Override
-    public Event updateEvent(Event event) {
-        if(event.getId() == null || eventRepository.existsById(event.getId())) {
-            throw new ResourceNotFoundException(EVENT_NOT_FOUND);
-        }
-        return eventRepository.save(event);
+    @Transactional
+    public Event updateEvent(Long eventId, String comment, LocalDateTime date, EventType eventType,
+                             BigDecimal delta, Long currencyId) {
+        Event existingEvent = findByEventId(eventId);
+
+        new ValidationErrors()
+                .check(date == null, DATE_FIELD, DATE_NULL)
+                .check(delta == null, VALUE_FIELD, VALUE_NULL)
+                .check(currencyId == null, CURRENCY_FIELD, CURRENCY_NULL)
+                .throwIfAny();
+
+        Currency existingCurrency = currencyRepository.findById(currencyId)
+                        .orElseThrow(() -> new ResourceNotFoundException(CURRENCY_NOT_FOUND));
+
+        existingEvent.setComment(comment);
+        existingEvent.setDate(date);
+        existingEvent.setType(eventType);
+        existingEvent.setDelta(delta);
+        existingEvent.setCurrency(existingCurrency);
+
+        return existingEvent;
     }
 
     @Override
@@ -75,7 +97,9 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public List<Event> getAllEventsByDateAndCurrency(String currency) {
-        List<Event> allEvents =  eventRepository.findAllByCurrency(currency, null);
+        List<Event> allEvents = currency == null ?
+                eventRepository.findAll() :
+                eventRepository.findAllByCurrency_Currency(currency, Pageable.unpaged());
 
         // Truncate to Days
         allEvents.forEach(event ->
@@ -87,14 +111,7 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public List<Event> getEventsByPurse(Purse purse) {
-        List<Event> events = eventRepository.getEventsByPurse(purse);
-        return events.stream().filter(event -> event.getDate() != null).toList();
-
-        //return events.stream()
-        //        .sorted(Comparator.comparing(
-        //               Event::getDate, Comparator.nullsFirst(Comparator.naturalOrder())))
-        //        .toList();
-
+        return eventRepository.getEventsByPurseAndDateIsNotNullOrderByDateAsc(purse);
     }
 
 

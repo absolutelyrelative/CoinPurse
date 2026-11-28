@@ -40,7 +40,7 @@ public class PurseServicesImpl implements PurseServices {
 
     @Override
     public Purse updatePurse(Purse purse) {
-        if(purse.getId() == null || purseRepository.existsById(purse.getId())) {
+        if(purse.getId() == null || !purseRepository.existsById(purse.getId())) {
             throw new ResourceNotFoundException(PURSE_NOT_FOUND);
         }
         return purseRepository.save(purse);
@@ -48,7 +48,7 @@ public class PurseServicesImpl implements PurseServices {
 
     @Override
     public void delete(long purseId) {
-        if(purseRepository.existsById(purseId)) {
+        if(!purseRepository.existsById(purseId)) {
             throw new ResourceNotFoundException(PURSE_NOT_FOUND);
         }
         purseRepository.deleteById(purseId);

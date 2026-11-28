@@ -61,7 +61,11 @@ public class EventController {
     @PutMapping(value = "/{purseId}/edit", produces = "application/json", consumes = "application/json")
     public ResponseEntity<Event> updateEvent(@RequestBody @Validated(OnUpdate.class) EventDto event,
                                              @PathVariable @NotNull @Min(1) Long purseId){
-        Event savedEvent = eventServices.updateEvent(EventMapper.mapToEvent(event));
+        Event savedEvent = eventServices.updateEvent(
+                event.getId(), event.getComment(), event.getDate(), event.getType(),
+                event.getDelta(), event.getCurrency().getId()
+        );
+
         return ResponseEntity.ok(savedEvent);
     }
 
@@ -73,8 +77,9 @@ public class EventController {
     }
 
     @GetMapping(value = "/summary", produces = "application/json")
-    public ResponseEntity<List<EventDto>> getSummary() {
-        List<EventDto> events = eventServices.getAllEventsByDateAndCurrency("").stream().map(EventMapper::mapToEventDto)
+    public ResponseEntity<List<EventDto>> getSummary(@RequestParam(required = false) String currency) {
+        List<EventDto> events = eventServices.getAllEventsByDateAndCurrency(currency).stream()
+                .map(EventMapper::mapToEventDto)
                 .toList();
         return ResponseEntity.ok(events);
     }

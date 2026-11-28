@@ -1,5 +1,6 @@
 package com.coinpurse.web.services.impl;
 
+import com.coinpurse.web.domain.exceptions.ResourceNotFoundException;
 import com.coinpurse.web.dto.user.RegistrationDto;
 import com.coinpurse.web.model.Role;
 import com.coinpurse.web.model.User;
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+
+import static com.coinpurse.web.constants.ErrorMessages.ROLE_NOT_FOUND;
+import static com.coinpurse.web.constants.ErrorMessages.USER_NOT_FOUND;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,19 +32,22 @@ public class UserServiceImpl implements UserService {
         user.setUsername(registrationDto.getUsername());
         user.setEmail(registrationDto.getEmail());
         //user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-        Role role = roleRepository.findByName("USER");
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new ResourceNotFoundException(ROLE_NOT_FOUND));
         user.setRoles(Arrays.asList(role));
         userRepository.save(user);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
     }
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+                    .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
     }
 
 }
