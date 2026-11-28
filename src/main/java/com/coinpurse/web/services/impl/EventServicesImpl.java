@@ -62,7 +62,7 @@ public class EventServicesImpl implements EventServices {
 
     @Override
     public Event updateEvent(Event event) {
-        if(event.getId() == null || eventRepository.existsById(event.getId())) {
+        if(event.getId() == null || !eventRepository.existsById(event.getId())) {
             throw new ResourceNotFoundException(EVENT_NOT_FOUND);
         }
         return eventRepository.save(event);
