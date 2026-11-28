@@ -24,6 +24,7 @@ public class Event {
     private String comment;
     private LocalDateTime date;
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdon;
     @UpdateTimestamp
     private LocalDateTime updatedon;

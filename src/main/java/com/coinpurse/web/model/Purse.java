@@ -23,6 +23,7 @@ public class Purse {
     private String title;
     private String description;
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime creation;
     @ManyToOne(fetch = FetchType.LAZY)
     private Currency currency;

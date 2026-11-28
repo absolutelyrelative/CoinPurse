@@ -24,6 +24,7 @@ public class Currency {
     private String currencyDescription;
     private BigDecimal conversionRatioToEur;
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdon;
     @UpdateTimestamp
     private LocalDateTime updatedon;
